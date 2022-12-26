@@ -1,0 +1,20 @@
+import DashboardLayout from 'components/ui/DashboardLayout';
+import { routes } from 'constants/routesConstants';
+import { FC } from 'react';
+import { Link } from 'react-router-dom';
+
+const DashboardRoles: FC = () => {
+  return (
+    <DashboardLayout>
+      <h1 className="mb-4">Roles</h1>
+      <Link
+        to={`${routes.DASHBAORD_PREFIX}/roles/add`}
+        className="btn btn-dark"
+      >
+        Add
+      </Link>
+    </DashboardLayout>
+  );
+};
+
+export default DashboardRoles;
