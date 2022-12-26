@@ -6,8 +6,6 @@
 
 - [Description](#description)
 - [Available Scripts](#available-scripts)
-- [Learn More](#learn-more)
-- [Support](#support)
 - [References](#references)
 - [Author Info](#author-info)
 
@@ -18,6 +16,7 @@
 If you want to have a different font, go to: [google fonts](https://fonts.google.com/) and download desired font.
 
 **In this tutorial you will learn how to use:**
+
 - react-bootstrap
 - react-hook-form with yup validation
 - CRUD functionality - Create Read Update Delete
