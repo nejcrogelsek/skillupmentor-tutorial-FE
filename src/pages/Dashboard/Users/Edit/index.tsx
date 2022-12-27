@@ -1,5 +1,5 @@
 import DashboardLayout from 'components/ui/DashboardLayout';
-import CreateUserForm from 'components/user/CreateUserForm/CreateUserForm';
+import CreateUpdateUserForm from 'components/user/CreateUpdateUserForm/CreateUpdateUserForm';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -9,7 +9,7 @@ const DashboardUsersEdit: FC = () => {
   return (
     <DashboardLayout>
       <h1 className="mb-4 text-center">Edit user</h1>
-      <CreateUserForm defaultValues={location.state} />
+      <CreateUpdateUserForm defaultValues={location.state} />
     </DashboardLayout>
   );
 };

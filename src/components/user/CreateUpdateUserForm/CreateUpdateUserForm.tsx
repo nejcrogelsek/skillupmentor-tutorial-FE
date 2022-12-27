@@ -22,7 +22,7 @@ interface Props {
   defaultValues?: UserType & { isActiveUser?: boolean };
 }
 
-const CreateUserForm: FC<Props> = ({ defaultValues }) => {
+const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
   const { handleSubmit, errors, control } = useCreateUpdateUserForm({
     defaultValues,
   });
@@ -206,4 +206,4 @@ const CreateUserForm: FC<Props> = ({ defaultValues }) => {
   );
 };
 
-export default observer(CreateUserForm);
+export default observer(CreateUpdateUserForm);
