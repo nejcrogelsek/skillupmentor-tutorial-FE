@@ -1,4 +1,4 @@
-import { UserAccess } from 'hooks/react-hook-form/useCreateUser';
+import { UserAccess } from 'hooks/react-hook-form/useCreateUpdateUser';
 
 export type UserType = {
   id: string;

@@ -4,4 +4,5 @@ export enum apiRoutes {
   SIGNOUT = '/auth/signout',
   FETCH_USER = '/auth',
   FETCH_USERS = '/users',
+  USERS_PREFIX = '/users',
 }

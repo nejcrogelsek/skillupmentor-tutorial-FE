@@ -48,7 +48,7 @@ const Topbar: FC = () => {
             <Link
               className="btn btn-dark text-decoration-none text-light me-3"
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-              state={{ ...authStore.user }}
+              state={{ ...authStore.user, isActiveUser: true }}
             >
               {(authStore.user?.first_name || authStore.user?.last_name)
                 ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
@@ -79,7 +79,7 @@ const Topbar: FC = () => {
             <Toast.Header>
               <strong className="me-auto text-danger">Error</strong>
             </Toast.Header>
-            <Toast.Body className='text-danger'>{apiError}</Toast.Body>
+            <Toast.Body className='text-danger bg-light'>{apiError}</Toast.Body>
           </Toast>
         </ToastContainer>
       )}

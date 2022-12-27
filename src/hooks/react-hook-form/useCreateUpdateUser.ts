@@ -9,9 +9,20 @@ export enum UserAccess {
 }
 
 export interface CreateUserFields {
+  first_name?: string;
+  last_name?: string;
   email: string;
   password: string;
   confirm_password: string;
+  access: UserAccess;
+}
+
+export interface UpdateUserFields {
+  first_name?: string;
+  last_name?: string;
+  email: string;
+  password?: string;
+  confirm_password?: string;
   access: UserAccess;
 }
 
@@ -19,8 +30,10 @@ interface Props {
   defaultValues?: UserType;
 }
 
-export const useCreateUserForm = ({ defaultValues }: Props) => {
+export const useCreateUpdateUserForm = ({ defaultValues }: Props) => {
   const CreateUserSchema = Yup.object().shape({
+    first_name: Yup.string().notRequired(),
+    last_name: Yup.string().notRequired(),
     email: Yup.string().email().required('Please enter a valid email'),
     password: Yup.string()
       .matches(
@@ -32,8 +45,20 @@ export const useCreateUserForm = ({ defaultValues }: Props) => {
       .oneOf([Yup.ref('password'), null], 'Passwords do not match')
       .required('Passwords do not match'),
     access: Yup.string()
+      .default(UserAccess.USER)
       .oneOf([UserAccess.USER, UserAccess.ADMIN], 'Invalid value')
       .required('Access field is required'),
+  });
+
+  const UpdateUserSchema = Yup.object().shape({
+    first_name: Yup.string().notRequired(),
+    last_name: Yup.string().notRequired(),
+    email: Yup.string().email().notRequired(),
+    password: Yup.string().notRequired(),
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords do not match')
+      .notRequired(),
+    access: Yup.string().notRequired(),
   });
 
   const {
@@ -43,6 +68,8 @@ export const useCreateUserForm = ({ defaultValues }: Props) => {
     control,
   } = useForm({
     defaultValues: {
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
       confirm_password: '',
@@ -50,7 +77,9 @@ export const useCreateUserForm = ({ defaultValues }: Props) => {
       ...defaultValues,
     },
     mode: 'onSubmit',
-    resolver: yupResolver(CreateUserSchema),
+    resolver: defaultValues
+      ? yupResolver(UpdateUserSchema)
+      : yupResolver(CreateUserSchema),
   });
 
   return {
@@ -61,4 +90,4 @@ export const useCreateUserForm = ({ defaultValues }: Props) => {
   };
 };
 
-export type CreateUserForm = ReturnType<typeof useCreateUserForm>;
+export type CreateUpdateUserForm = ReturnType<typeof useCreateUpdateUserForm>;

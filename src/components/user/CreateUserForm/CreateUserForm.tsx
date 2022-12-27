@@ -1,29 +1,40 @@
 import {
-  RegisterUserFields,
-  useRegisterForm,
-} from 'hooks/react-hook-form/useRegister';
+  CreateUserFields,
+  UpdateUserFields,
+  useCreateUpdateUserForm,
+} from 'hooks/react-hook-form/useCreateUpdateUser';
 import { FC, useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormLabel from 'react-bootstrap/FormLabel';
-import authStore from 'stores/auth.store';
 import * as API from 'api/Api';
 import { StatusCode } from 'constants/errorConstants';
 import { observer } from 'mobx-react';
 import { routes } from 'constants/routesConstants';
+import { UserType } from 'models/Auth';
+import authStore from 'stores/auth.store';
 
-const RegisterForm: FC = () => {
-  const { handleSubmit, errors, control } = useRegisterForm();
+interface Props {
+  defaultValues?: UserType & { isActiveUser?: boolean }
+}
+
+const CreateUserForm: FC<Props> = ({ defaultValues }) => {
+  const { handleSubmit, errors, control } = useCreateUpdateUserForm({ defaultValues });
   const navigate = useNavigate();
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
 
-  const onSubmit = handleSubmit(async (data: RegisterUserFields) => {
-    const response = await API.register(data);
+  const onSubmit = handleSubmit(async (data: CreateUserFields | UpdateUserFields) => {
+    if (!defaultValues) await handleAdd(data as CreateUserFields);
+    else await handleUpdate(data as UpdateUserFields);
+  });
+
+  const handleAdd = async (data: CreateUserFields) => {
+    const response = await API.createUser(data);
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
       setApiError(response.data.message);
       setShowError(true);
@@ -31,9 +42,25 @@ const RegisterForm: FC = () => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      navigate(routes.LOGIN);
+      navigate(`${routes.DASHBOARD_PREFIX}/users`);
     }
-  });
+  };
+
+  const handleUpdate = async (data: UpdateUserFields) => {
+    const response = await API.updateUser(data, defaultValues?.id as string);
+    if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
+      setApiError(response.data.message);
+      setShowError(true);
+    } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
+      setApiError(response.data.message);
+      setShowError(true);
+    } else {
+      if (defaultValues?.isActiveUser) {
+        authStore.login(response.data);
+      }
+      navigate(`${routes.DASHBOARD_PREFIX}/users`);
+    }
+  };
 
   return (
     <>
@@ -157,15 +184,8 @@ const RegisterForm: FC = () => {
             </Form.Group>
           )}
         />
-
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <p className="mb-0">Already have an account?</p>
-          <Link className="text-decoration-none text-end" to="/login">
-            Login
-          </Link>
-        </div>
         <Button className="w-100" type="submit">
-          Create an account
+          {defaultValues ? 'Update user' : 'Create new user'}
         </Button>
       </Form>
       {showError && (
@@ -182,4 +202,4 @@ const RegisterForm: FC = () => {
   );
 };
 
-export default observer(RegisterForm);
+export default observer(CreateUserForm);

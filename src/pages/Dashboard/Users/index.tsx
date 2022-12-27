@@ -1,18 +1,40 @@
 import DashboardLayout from 'components/ui/DashboardLayout';
 import { routes } from 'constants/routesConstants';
-import { FC } from 'react';
-import { useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
+import { FC, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { Link, useNavigate } from 'react-router-dom';
 import * as API from 'api/Api';
 import { UserType } from 'models/Auth';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Toast, ToastContainer } from 'react-bootstrap';
 import useMediaQuery from 'hooks/useMediaQuery';
+import { StatusCode } from 'constants/errorConstants';
 
 const DashboardUsers: FC = () => {
+  const [apiError, setApiError] = useState('');
+  const [showError, setShowError] = useState(false);
   const { isMobile } = useMediaQuery(768);
-  const { data, isLoading, isError, error } = useQuery(['fetchUsers'], API.fetchUsers);
+  const { data, isLoading, refetch } = useQuery(['fetchUsers'], API.fetchUsers);
+  const { mutate } = useMutation((id: string) => API.deleteUser(id), {
+    onSuccess: response => {
+      if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
+        setApiError(response.data.message);
+        setShowError(true);
+      } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
+        setApiError(response.data.message);
+        setShowError(true);
+      } else {
+        refetch();
+      }
+    },
+    onError: () => {
+      setApiError('Something went wrong while deleting a user.');
+      setShowError(true);
+    },
+  });
 
-  console.log(data?.data);
+  const handleDelete = async (id: string) => {
+    mutate(id);
+  };
 
   return (
     <DashboardLayout>
@@ -51,8 +73,12 @@ const DashboardUsers: FC = () => {
                   </td>
                   <td>{item.access}</td>
                   <td>
-                    <Button className={isMobile ? 'btn-warning me-2 mb-2' : 'btn-warning me-2'} size='sm' >Edit</Button>
-                    <Button className={isMobile ? 'btn-danger mb-2' : 'btn-danger'} size='sm' >Delete</Button>
+                    <Link
+                      className={isMobile ? 'btn btn-warning btn-sm me-2 mb-2' : 'btn btn-warning btn-sm me-2'}
+                      to={`${routes.DASHBOARD_PREFIX}/users/edit`}
+                      state={{ id: item.id, first_name: item.first_name, last_name: item.last_name, email: item.email, access: item.access }}
+                    >Edit</Link>
+                    <Button className={isMobile ? 'btn-danger mb-2' : 'btn-danger'} size='sm' onClick={() => handleDelete(item.id)}>Delete</Button>
                   </td>
                 </tr>
               ))}
@@ -61,6 +87,16 @@ const DashboardUsers: FC = () => {
         </>
       )
       }
+      {showError && (
+        <ToastContainer className="p-3" position='top-end'>
+          <Toast onClose={() => setShowError(false)} show={showError}>
+            <Toast.Header>
+              <strong className="me-auto text-danger">Error</strong>
+            </Toast.Header>
+            <Toast.Body className='text-danger bg-light'>{apiError}</Toast.Body>
+          </Toast>
+        </ToastContainer>
+      )}
     </DashboardLayout >
   );
 };
