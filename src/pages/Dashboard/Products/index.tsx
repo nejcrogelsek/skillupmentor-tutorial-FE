@@ -8,7 +8,7 @@ const DashboardProducts: FC = () => {
     <DashboardLayout>
       <h1 className="mb-4">Products</h1>
       <Link
-        to={`${routes.DASHBAORD_PREFIX}/products/add`}
+        to={`${routes.DASHBOARD_PREFIX}/products/add`}
         className="btn btn-dark"
       >
         Add

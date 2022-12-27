@@ -19,10 +19,7 @@ const LoginForm: FC = () => {
   const [showError, setShowError] = useState(false);
 
   const onSubmit = handleSubmit(async (data: LoginUserFields) => {
-    const response = await API.login({
-      email: data.email,
-      password: data.password,
-    });
+    const response = await API.login(data);
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
       setApiError(response.data.message);
       setShowError(true);

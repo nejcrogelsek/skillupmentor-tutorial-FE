@@ -3,7 +3,7 @@ import { UserType } from 'models/Auth';
 
 export interface AuthContextType {
   isAuthenticated: boolean;
-  user?: UserType;
+  user?: UserType | null;
   error?: string | { [key: string]: string };
   reloadAuthentication: () => void;
   login: () => void;
@@ -12,8 +12,7 @@ export interface AuthContextType {
 
 class AuthStore {
   isAuthenticated = false;
-  user?: UserType = undefined;
-  error?: string | { [key: string]: string } = undefined;
+  user?: UserType | null = null;
 
   constructor() {
     makeAutoObservable(this);

@@ -8,7 +8,7 @@ const DashboardUsers: FC = () => {
     <DashboardLayout>
       <h1 className="mb-4">Users</h1>
       <Link
-        to={`${routes.DASHBAORD_PREFIX}/users/add`}
+        to={`${routes.DASHBOARD_PREFIX}/users/add`}
         className="btn btn-dark"
       >
         Add

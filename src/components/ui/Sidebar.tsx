@@ -16,23 +16,23 @@ interface ISidebarItem {
 const sidebarItems: ISidebarItem[] = [
   {
     title: 'Dashboard',
-    href: routes.DASHBAORD_PREFIX,
+    href: routes.DASHBOARD_PREFIX,
   },
   {
     title: 'Users',
-    href: `${routes.DASHBAORD_PREFIX}/users`,
+    href: `${routes.DASHBOARD_PREFIX}/users`,
   },
   {
     title: 'Roles',
-    href: `${routes.DASHBAORD_PREFIX}/roles`,
+    href: `${routes.DASHBOARD_PREFIX}/roles`,
   },
   {
     title: 'Products',
-    href: `${routes.DASHBAORD_PREFIX}/products`,
+    href: `${routes.DASHBOARD_PREFIX}/products`,
   },
   {
     title: 'Orders',
-    href: `${routes.DASHBAORD_PREFIX}/orders`,
+    href: `${routes.DASHBOARD_PREFIX}/orders`,
   },
 ];
 

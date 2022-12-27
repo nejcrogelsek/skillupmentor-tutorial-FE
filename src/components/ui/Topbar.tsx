@@ -1,5 +1,5 @@
 import { routes } from 'constants/routesConstants';
-import { FC, memo, useState } from 'react';
+import { FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authStore from 'stores/auth.store';
 import Button from 'react-bootstrap/Button';
@@ -33,10 +33,13 @@ const Topbar: FC = () => {
         <div>
           <Link
             className="btn btn-dark text-decoration-none text-light me-4"
-            to={`${routes.DASHBAORD_PREFIX}/users/edit`}
-            state={authStore.user}
+            to={`${routes.DASHBOARD_PREFIX}/users/edit`}
+            state={{ ...authStore.user }}
           >
-            {authStore.user?.first_name} {authStore.user?.last_name}
+            {(authStore.user?.first_name || authStore.user?.last_name)
+              ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
+              : authStore.user?.email
+            }
           </Link>
           <Button className="btn-dark me-4" onClick={signout}>
             Sign out
