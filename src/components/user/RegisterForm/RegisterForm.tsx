@@ -14,6 +14,7 @@ import authStore from 'stores/auth.store';
 import * as API from 'api/Api';
 import { StatusCode } from 'constants/errorConstants';
 import { observer } from 'mobx-react';
+import { routes } from 'constants/routesConstants';
 
 const RegisterForm: FC = () => {
   const { handleSubmit, errors, control } = useRegisterForm();
@@ -30,14 +31,7 @@ const RegisterForm: FC = () => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      authStore.login({
-        id: response.data.id,
-        email: response.data.email,
-        first_name: response.data.first_name,
-        last_name: response.data.last_name,
-        access: response.data.access,
-      });
-      navigate('/');
+      navigate(routes.LOGIN);
     }
   });
 

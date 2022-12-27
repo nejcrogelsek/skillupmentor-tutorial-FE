@@ -6,7 +6,7 @@ import { Navigate, RouteProps, useLocation } from 'react-router-dom';
 const PrivateRoute: FC<RouteProps> = ({ children }: RouteProps) => {
   const location = useLocation();
 
-  if (!authStore.isAuthenticated) {
+  if (!authStore.user) {
     return (
       <Navigate
         to={`/login?redirect=${encodeURIComponent(location.pathname)}`}

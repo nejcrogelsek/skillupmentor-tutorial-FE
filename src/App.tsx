@@ -4,6 +4,7 @@ import { usePageIdentification } from 'hooks/usePageIdentification';
 
 const App: FC = () => {
   usePageIdentification();
+
   return <Routes />;
 };
 

@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { Navigate, RouteProps } from 'react-router-dom';
 
 const RestrictedRoute: FC<RouteProps> = ({ children }: RouteProps) => {
-  if (authStore.isAuthenticated) {
+  if (authStore.user) {
     return <Navigate to="/" />;
   }
   return children as JSX.Element;

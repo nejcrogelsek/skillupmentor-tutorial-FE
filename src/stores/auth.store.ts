@@ -1,39 +1,28 @@
 import { makeAutoObservable } from 'mobx';
 import { UserType } from 'models/Auth';
+import { userStorage } from 'utils/localStorage';
 
 export interface AuthContextType {
-  isAuthenticated: boolean;
   user?: UserType | null;
-  error?: string | { [key: string]: string };
-  reloadAuthentication: () => void;
   login: () => void;
   signout: () => void;
 }
 
 class AuthStore {
-  isAuthenticated = false;
-  user?: UserType | null = null;
+  user?: UserType | null = userStorage.getUser() || null;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   login(user: UserType) {
+    userStorage.setUser(user);
     this.user = user;
-    this.isAuthenticated = true;
   }
 
   signout() {
+    userStorage.clearUser();
     this.user = undefined;
-    this.isAuthenticated = false;
-  }
-
-  reloadAuthentication() {
-    if (this.user) {
-      this.isAuthenticated = true;
-    } else {
-      this.isAuthenticated = false;
-    }
   }
 }
 

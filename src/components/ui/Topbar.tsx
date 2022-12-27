@@ -8,8 +8,10 @@ import { StatusCode } from 'constants/errorConstants';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import Toast from 'react-bootstrap/Toast';
 import { observer } from 'mobx-react';
+import useMediaQuery from 'hooks/useMediaQuery';
 
 const Topbar: FC = () => {
+  const { isMobile } = useMediaQuery(768);
   const navigate = useNavigate();
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
@@ -29,19 +31,32 @@ const Topbar: FC = () => {
   };
   return (
     <>
-      <div className="d-flex flex-grow-1 justify-content-end align-items-center bg-dark px-4 py-2">
+      <div className="d-flex flex-grow-1 justify-content-end align-items-center bg-dark px-3 py-2">
         <div>
-          <Link
-            className="btn btn-dark text-decoration-none text-light me-4"
-            to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-            state={{ ...authStore.user }}
-          >
-            {(authStore.user?.first_name || authStore.user?.last_name)
-              ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
-              : authStore.user?.email
-            }
-          </Link>
-          <Button className="btn-dark me-4" onClick={signout}>
+          {isMobile ? (
+            <Link
+              className="btn btn-dark text-decoration-none text-light me-3"
+              to={`${routes.DASHBOARD_PREFIX}/users/edit`}
+              state={{ ...authStore.user }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+              </svg>
+            </Link>
+          ) : (
+            <Link
+              className="btn btn-dark text-decoration-none text-light me-3"
+              to={`${routes.DASHBOARD_PREFIX}/users/edit`}
+              state={{ ...authStore.user }}
+            >
+              {(authStore.user?.first_name || authStore.user?.last_name)
+                ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
+                : authStore.user?.email
+              }
+            </Link>
+          )}
+          <Button className="btn-dark me-3" onClick={signout}>
             Sign out
           </Button>
           <Link to={routes.HOME} className="btn btn-dark">
