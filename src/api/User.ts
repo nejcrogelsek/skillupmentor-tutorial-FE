@@ -36,3 +36,6 @@ export const signout = async () =>
 
 export const fetchUsers = async () =>
   apiRequest<null, UserType[]>('get', apiRoutes.FETCH_USERS);
+
+export const refreshTokens = async () =>
+  apiRequest<undefined, UserType>('get', apiRoutes.REFRESH_TOKENS);

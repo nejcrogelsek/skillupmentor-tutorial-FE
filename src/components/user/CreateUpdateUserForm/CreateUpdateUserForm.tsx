@@ -2,6 +2,7 @@ import {
   CreateUserFields,
   UpdateUserFields,
   useCreateUpdateUserForm,
+  UserAccess,
 } from 'hooks/react-hook-form/useCreateUpdateUser';
 import { FC, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -134,6 +135,31 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
               {errors.email && (
                 <div className="invalid-feedback text-danger">
                   {errors.email.message}
+                </div>
+              )}
+            </Form.Group>
+          )}
+        />
+        <Controller
+          control={control}
+          name="access"
+          render={({ field }) => (
+            <Form.Group className="mb-3">
+              <FormLabel htmlFor="access">Access</FormLabel>
+              <Form.Select
+                {...field}
+                aria-label="Access"
+                aria-describedby="access"
+                className={
+                  errors.access ? 'form-control is-invalid' : 'form-control'
+                }
+              >
+                <option value={UserAccess.USER}>User</option>
+                <option value={UserAccess.ADMIN}>Admin</option>
+              </Form.Select>
+              {errors.access && (
+                <div className="invalid-feedback text-danger">
+                  {errors.access.message}
                 </div>
               )}
             </Form.Group>
