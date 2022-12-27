@@ -1,33 +1,21 @@
-import { CreateUserFields } from 'hooks/react-hook-form/useCreateUser';
+import { apiRoutes } from 'constants/apiConstants';
+import { LoginUserFields } from 'hooks/react-hook-form/useLogin';
+import { RegisterUserFields } from 'hooks/react-hook-form/useRegister';
 import { UserType } from 'models/Auth';
 
 import { apiRequest } from './Api';
 
-export const fetchUser = async (token: string) =>
-  apiRequest<string, UserType>('post', 'auth/social-login', token);
+export const fetchUser = async () =>
+  apiRequest<undefined, UserType>('get', apiRoutes.FETCH_USER);
 
-export const login = async (data: { email: string; password: string }) =>
-  apiRequest<{ email: string; password: string }, UserType>(
-    'post',
-    'auth/login',
-    data,
-  );
+export const login = async (data: LoginUserFields) =>
+  apiRequest<LoginUserFields, UserType>('post', apiRoutes.LOGIN, data);
 
-export const register = async (data: CreateUserFields) =>
-  apiRequest<CreateUserFields, void>('post', 'auth/register', data);
-
-export const resendEmailVerification = async (data: {
-  token?: string;
-  email?: string;
-}) =>
-  apiRequest<{ token?: string; email?: string }, void>(
-    'post',
-    'auth/resend-email-verification',
-    data,
-  );
+export const register = async (data: RegisterUserFields) =>
+  apiRequest<RegisterUserFields, void>('post', apiRoutes.SIGNUP, data);
 
 export const signout = async () =>
-  apiRequest<undefined, void>('post', 'auth/signout');
+  apiRequest<undefined, void>('post', apiRoutes.SIGNOUT);
 
 export const fetchUsers = async () =>
-  apiRequest<null, UserType[]>('get', 'users');
+  apiRequest<null, UserType[]>('get', apiRoutes.FETCH_USERS);

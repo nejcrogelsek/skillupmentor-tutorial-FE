@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-
-import { useRouter } from 'hooks/useRouter';
+import { useLocation } from 'react-router-dom';
 
 const onDefault = () => {
   document.title = 'Tutorial';
@@ -47,7 +46,7 @@ export const addPageIdentification = (_case: string, fn: () => void) => {
 };
 
 export const usePageIdentification = () => {
-  const { location } = useRouter();
+  const location = useLocation();
 
   const customSwitch = (value: string) => {
     if (callbacks[value]) {

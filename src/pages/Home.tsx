@@ -16,7 +16,7 @@ const Home: FC = () => {
             <li>CRUD functionality - Create Read Update Delete</li>
             <li>file upload with NestJS</li>
             <li>connect ReactJS and NestJS</li>
-            <li>setup NestJS with swagger documentation and custom logging</li>
+            <li>setup NestJS with custom logging</li>
             <li>connect to PostgreSQL database using TypeORM</li>
             <li>create dtos with validation</li>
             <li>deploy ReactJS to AWS S3 Bucket</li>

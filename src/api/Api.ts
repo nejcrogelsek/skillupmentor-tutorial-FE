@@ -6,22 +6,23 @@ export async function apiRequest<D = Record<string, unknown>, R = unknown>(
   input?: D,
   options?: {
     headers?: AxiosRequestHeaders;
-    external?: boolean;
   },
 ) {
   try {
-    const res = await Axios.request<R>({
-      url: options?.external ? path : `${process.env.API_URL}/${path}`,
+    const response = await Axios.request<R>({
+      baseURL: 'http://localhost:8080',
+      url: path,
       method: method,
       data: input,
       headers: options?.headers,
       withCredentials: true,
     });
-    return res.data;
+    return response;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Error message: error.response.data.message
-    return error.response ? error.response.data ?? error.response.data : error;
+    // return error.response ? error.response.data ?? error.response.data : error;
+    return error.response;
   }
 }
 

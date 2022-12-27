@@ -7,7 +7,7 @@ export interface AuthContextType {
   error?: string | { [key: string]: string };
   reloadAuthentication: () => void;
   login: () => void;
-  logout: () => void;
+  signout: () => void;
 }
 
 class AuthStore {
@@ -24,7 +24,7 @@ class AuthStore {
     this.isAuthenticated = true;
   }
 
-  logout() {
+  signout() {
     this.user = undefined;
     this.isAuthenticated = false;
   }

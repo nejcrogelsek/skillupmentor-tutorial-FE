@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 export interface RegisterUserFields {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   confirm_password: string;
@@ -10,8 +12,8 @@ export interface RegisterUserFields {
 
 export const useRegisterForm = () => {
   const RegisterSchema = Yup.object().shape({
-    first_name: Yup.string().required('First name is required'),
-    last_name: Yup.string().required('Last name is required'),
+    first_name: Yup.string().notRequired(),
+    last_name: Yup.string().notRequired(),
     email: Yup.string().email().required('Please enter a valid email'),
     password: Yup.string()
       .matches(

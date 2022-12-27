@@ -54,57 +54,57 @@ export const AppRoutes: AppRoute[] = [
   },
   // Private Routes
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard',
     children: <Dashboard />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/users',
     children: <DashboardUsers />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/users/add',
     children: <DashboardUsersAdd />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/users/edit',
     children: <DashboardUsersEdit />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/roles',
     children: <DashboardRoles />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/roles/add',
     children: <DashboardRolesAdd />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/roles/edit',
     children: <DashboardRolesEdit />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/products',
     children: <DashboardProducts />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/products/add',
     children: <DashboardProductsAdd />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/products/edit',
     children: <DashboardProductsEdit />,
   },
   {
-    type: RouteType.PUBLIC,
+    type: RouteType.PRIVATE,
     path: '/dashboard/orders',
     children: <DashboardOrders />,
   },
