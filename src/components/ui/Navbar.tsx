@@ -86,16 +86,16 @@ const Navbar: FC = () => {
                 )}
               </ul>
             </div>
-          </div >
-        </nav >
-      </header >
+          </div>
+        </nav>
+      </header>
       {showError && (
-        <ToastContainer className="p-3" position='top-end'>
+        <ToastContainer className="p-3" position="top-end">
           <Toast onClose={() => setShowError(false)} show={showError}>
             <Toast.Header>
               <strong className="me-auto text-danger">Error</strong>
             </Toast.Header>
-            <Toast.Body className='text-danger bg-light'>{apiError}</Toast.Body>
+            <Toast.Body className="text-danger bg-light">{apiError}</Toast.Body>
           </Toast>
         </ToastContainer>
       )}

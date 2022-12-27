@@ -20,10 +20,7 @@ root.render(
       <LoadingProvider>
         <Router>
           <App />
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            position="bottom-left"
-          />
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
         </Router>
       </LoadingProvider>
     </QueryClientProvider>

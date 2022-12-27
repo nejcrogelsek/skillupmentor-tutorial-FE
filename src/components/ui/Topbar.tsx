@@ -29,6 +29,7 @@ const Topbar: FC = () => {
       navigate('/');
     }
   };
+  console.log(authStore.user);
   return (
     <>
       <div className="d-flex flex-grow-1 justify-content-end align-items-center bg-dark px-3 py-2">
@@ -39,9 +40,19 @@ const Topbar: FC = () => {
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
               state={{ ...authStore.user }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-person-circle"
+                viewBox="0 0 16 16"
+              >
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                <path
+                  fillRule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                />
               </svg>
             </Link>
           ) : (
@@ -50,10 +61,9 @@ const Topbar: FC = () => {
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
               state={{ ...authStore.user, isActiveUser: true }}
             >
-              {(authStore.user?.first_name || authStore.user?.last_name)
+              {authStore.user?.first_name || authStore.user?.last_name
                 ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
-                : authStore.user?.email
-              }
+                : authStore.user?.email}
             </Link>
           )}
           <Button className="btn-dark me-3" onClick={signout}>
@@ -74,12 +84,12 @@ const Topbar: FC = () => {
         </div>
       </div>
       {showError && (
-        <ToastContainer className="p-3" position='top-end'>
+        <ToastContainer className="p-3" position="top-end">
           <Toast onClose={() => setShowError(false)} show={showError}>
             <Toast.Header>
               <strong className="me-auto text-danger">Error</strong>
             </Toast.Header>
-            <Toast.Body className='text-danger bg-light'>{apiError}</Toast.Body>
+            <Toast.Body className="text-danger bg-light">{apiError}</Toast.Body>
           </Toast>
         </ToastContainer>
       )}

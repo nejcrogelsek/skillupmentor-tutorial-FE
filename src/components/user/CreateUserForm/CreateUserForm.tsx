@@ -19,19 +19,23 @@ import { UserType } from 'models/Auth';
 import authStore from 'stores/auth.store';
 
 interface Props {
-  defaultValues?: UserType & { isActiveUser?: boolean }
+  defaultValues?: UserType & { isActiveUser?: boolean };
 }
 
 const CreateUserForm: FC<Props> = ({ defaultValues }) => {
-  const { handleSubmit, errors, control } = useCreateUpdateUserForm({ defaultValues });
+  const { handleSubmit, errors, control } = useCreateUpdateUserForm({
+    defaultValues,
+  });
   const navigate = useNavigate();
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
 
-  const onSubmit = handleSubmit(async (data: CreateUserFields | UpdateUserFields) => {
-    if (!defaultValues) await handleAdd(data as CreateUserFields);
-    else await handleUpdate(data as UpdateUserFields);
-  });
+  const onSubmit = handleSubmit(
+    async (data: CreateUserFields | UpdateUserFields) => {
+      if (!defaultValues) await handleAdd(data as CreateUserFields);
+      else await handleUpdate(data as UpdateUserFields);
+    },
+  );
 
   const handleAdd = async (data: CreateUserFields) => {
     const response = await API.createUser(data);
@@ -189,12 +193,12 @@ const CreateUserForm: FC<Props> = ({ defaultValues }) => {
         </Button>
       </Form>
       {showError && (
-        <ToastContainer className="p-3" position='top-end'>
+        <ToastContainer className="p-3" position="top-end">
           <Toast onClose={() => setShowError(false)} show={showError}>
             <Toast.Header>
               <strong className="me-auto text-danger">Error</strong>
             </Toast.Header>
-            <Toast.Body className='text-danger bg-light'>{apiError}</Toast.Body>
+            <Toast.Body className="text-danger bg-light">{apiError}</Toast.Body>
           </Toast>
         </ToastContainer>
       )}
