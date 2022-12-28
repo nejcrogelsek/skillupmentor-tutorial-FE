@@ -12,6 +12,7 @@ const useAuth = () => {
     const response = await API.refreshTokens();
     if (response.data.statusCode === StatusCode.UNAUTHORIZED) {
       await API.signout();
+      userStorage.clearUser();
       authStore.signout();
     } else {
       authStore.login(response);
