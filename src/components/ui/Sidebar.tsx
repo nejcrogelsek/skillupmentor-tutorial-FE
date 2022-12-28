@@ -59,7 +59,7 @@ const Sidebar = () => {
   return (
     <div>
       <Button
-        className="btn-dark text-light rounded-0 d-flex justify-content-center align-items-center p-4"
+        className="sidebar__btn-menu btn-dark text-light rounded-0 d-flex justify-content-center align-items-center p-4"
         type="button"
         onClick={handleOpen}
       >

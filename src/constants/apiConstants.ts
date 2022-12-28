@@ -6,5 +6,7 @@ export enum apiRoutes {
   FETCH_USER = '/auth',
   FETCH_USERS = '/users',
   USERS_PREFIX = '/users',
+  UPLOAD_AVATAR_IMAGE = '/users/upload',
+  GET_AVATAR_IMAGE = '/users/get/image',
   PRODUCT_PREFIX = '/products',
 }

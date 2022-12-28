@@ -28,14 +28,7 @@ const LoginForm: FC = () => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      const loggedInUser: UserType = {
-        id: response.data.id,
-        email: response.data.email,
-        first_name: response.data.first_name,
-        last_name: response.data.last_name,
-        access: response.data.access,
-      };
-      authStore.login(loggedInUser);
+      authStore.login(response.data);
       navigate('/');
     }
   });

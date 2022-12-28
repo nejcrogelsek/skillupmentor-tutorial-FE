@@ -9,6 +9,7 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
 import Toast from 'react-bootstrap/Toast';
 import { observer } from 'mobx-react';
 import useMediaQuery from 'hooks/useMediaQuery';
+import Avatar from 'react-avatar';
 
 const Topbar: FC = () => {
   const { isMobile } = useMediaQuery(768);
@@ -29,10 +30,10 @@ const Topbar: FC = () => {
       navigate('/');
     }
   };
-  console.log(authStore.user);
+
   return (
     <>
-      <div className="d-flex flex-grow-1 justify-content-end align-items-center bg-dark px-3 py-2">
+      <div className="topbar d-flex flex-grow-1 justify-content-end align-items-center bg-dark px-3 py-2">
         <div>
           {isMobile ? (
             <Link
@@ -61,9 +62,16 @@ const Topbar: FC = () => {
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
               state={{ ...authStore.user, isActiveUser: true }}
             >
-              {authStore.user?.first_name || authStore.user?.last_name
-                ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
-                : authStore.user?.email}
+              <Avatar
+                className="topbar__avatar"
+                round
+                src={`http://localhost:8080/files/${authStore.user?.avatar}`}
+                alt={
+                  authStore.user?.first_name || authStore.user?.last_name
+                    ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
+                    : authStore.user?.email
+                }
+              />
             </Link>
           )}
           <Button className="btn-dark me-3" onClick={signout}>

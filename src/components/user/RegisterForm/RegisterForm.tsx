@@ -2,7 +2,7 @@ import {
   RegisterUserFields,
   useRegisterForm,
 } from 'hooks/react-hook-form/useRegister';
-import { FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import ToastContainer from 'react-bootstrap/ToastContainer';
@@ -13,7 +13,8 @@ import FormLabel from 'react-bootstrap/FormLabel';
 import * as API from 'api/Api';
 import { StatusCode } from 'constants/errorConstants';
 import { observer } from 'mobx-react';
-import { routes } from 'constants/routesConstants';
+import Avatar from 'react-avatar';
+import authStore from 'stores/auth.store';
 
 const RegisterForm: FC = () => {
   const { handleSubmit, errors, control } = useRegisterForm();
@@ -21,7 +22,12 @@ const RegisterForm: FC = () => {
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
 
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [fileError, setFileError] = useState(false);
+
   const onSubmit = handleSubmit(async (data: RegisterUserFields) => {
+    if (!file) return;
     const response = await API.register(data);
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
       setApiError(response.data.message);
@@ -30,13 +36,96 @@ const RegisterForm: FC = () => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      navigate(routes.LOGIN);
+      // Login user before uploading an avatar image
+      const loginResponse = await API.login({
+        email: data.email,
+        password: data.password,
+      });
+      if (loginResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
+        setApiError(loginResponse.data.message);
+        setShowError(true);
+      } else if (
+        loginResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+      ) {
+        setApiError(loginResponse.data.message);
+        setShowError(true);
+      } else {
+        // Upload file
+        const formData = new FormData();
+        formData.append('avatar', file, file.name);
+        const fileResponse = await API.uploadAvatar(formData);
+        if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
+          setApiError(fileResponse.data.message);
+          setShowError(true);
+        } else if (
+          fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+        ) {
+          setApiError(fileResponse.data.message);
+          setShowError(true);
+        } else {
+          // Get user with avatar image
+          const userResponse = await API.fetchUser();
+          if (
+            userResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+          ) {
+            setApiError(userResponse.data.message);
+            setShowError(true);
+          } else {
+            authStore.login(userResponse.data);
+            navigate('/');
+          }
+        }
+      }
     }
   });
+
+  const handleFileError = () => {
+    if (!file) setFileError(true);
+    else setFileError(false);
+  };
+
+  const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (target.files) {
+      const file = target.files[0];
+      setFile(file);
+    }
+  };
+
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+        setFileError(false);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+  }, [file]);
 
   return (
     <>
       <Form className="register-form" onSubmit={onSubmit}>
+        <Form.Group className="d-flex flex-column justify-content-center align-items-center">
+          <FormLabel htmlFor="avatar" id="avatar-p">
+            <Avatar round src={preview as string} alt="Avatar" />
+          </FormLabel>
+          <input
+            onChange={handleFileChange}
+            id="avatar"
+            name="avatar"
+            type="file"
+            aria-label="Avatar"
+            aria-describedby="first_name"
+            className="d-none"
+          />
+          {fileError && (
+            <div className="d-block invalid-feedback text-danger mb-2 text-center">
+              Polje avatar je obvezno
+            </div>
+          )}
+        </Form.Group>
         <Controller
           control={control}
           name="first_name"
@@ -163,7 +252,7 @@ const RegisterForm: FC = () => {
             Login
           </Link>
         </div>
-        <Button className="w-100" type="submit">
+        <Button className="w-100" type="submit" onMouseDown={handleFileError}>
           Create an account
         </Button>
       </Form>
