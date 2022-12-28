@@ -20,7 +20,7 @@ const useAuth = () => {
   };
 
   useEffect(() => {
-    if(userStorage.getUser()){
+    if (userStorage.getUser()) {
       (async () => {
         const response = await API.fetchUser();
         if (response.data.statusCode === StatusCode.OK) {

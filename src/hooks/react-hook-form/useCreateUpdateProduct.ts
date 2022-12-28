@@ -17,12 +17,15 @@ export const useCreateUpdateProductForm = ({ defaultValues }: Props) => {
   const CreateProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     price: Yup.number().required('Price is required'),
-    image_path: Yup.mixed()
-      .test('required', 'You need to provide a file', (file) => {
+    image_path: Yup.mixed().test(
+      'required',
+      'You need to provide a file',
+      (file) => {
         // return file && file.size <-- u can use this if you don't want to allow empty files to be uploaded;
         if (file) return true;
         return false;
-      })
+      },
+    ),
   });
 
   const {

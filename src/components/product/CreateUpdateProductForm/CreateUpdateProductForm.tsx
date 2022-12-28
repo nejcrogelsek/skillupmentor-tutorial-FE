@@ -1,6 +1,6 @@
 import {
   CreateUpdateProductFields,
-  useCreateUpdateProductForm
+  useCreateUpdateProductForm,
 } from 'hooks/react-hook-form/useCreateUpdateProduct';
 import { FC, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -29,12 +29,10 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
 
-  const onSubmit = handleSubmit(
-    async (data: CreateUpdateProductFields) => {
-      if (!defaultValues) await handleAdd(data);
-      else await handleUpdate(data);
-    },
-  );
+  const onSubmit = handleSubmit(async (data: CreateUpdateProductFields) => {
+    if (!defaultValues) await handleAdd(data);
+    else await handleUpdate(data);
+  });
 
   const handleAdd = async (data: CreateUpdateProductFields) => {
     const response = await API.createProduct(data);
