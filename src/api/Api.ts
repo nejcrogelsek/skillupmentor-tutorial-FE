@@ -10,7 +10,7 @@ export async function apiRequest<D = Record<string, unknown>, R = unknown>(
 ) {
   try {
     const response = await Axios.request<R>({
-      baseURL: 'http://localhost:8080',
+      baseURL: process.env.REACT_APP_API_URL,
       url: path,
       method: method,
       data: input,
