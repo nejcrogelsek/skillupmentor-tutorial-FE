@@ -119,6 +119,7 @@ const DashboardUsers: FC = () => {
       )}
       <div>
         <Button
+          className='me-2'
           onClick={() => setPageNumber((prev) => prev - 1)}
           disabled={pageNumber === 1}
         >
