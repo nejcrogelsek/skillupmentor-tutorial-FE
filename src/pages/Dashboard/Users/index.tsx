@@ -8,6 +8,8 @@ import { UserType } from 'models/Auth';
 import { Button, Table, Toast, ToastContainer } from 'react-bootstrap';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { StatusCode } from 'constants/errorConstants';
+import authStore from 'stores/auth.store';
+import { observer } from 'mobx-react';
 
 const DashboardUsers: FC = () => {
   const [apiError, setApiError] = useState('');
@@ -87,6 +89,7 @@ const DashboardUsers: FC = () => {
                         last_name: item.last_name,
                         email: item.email,
                         access: item.access,
+                        isActiveUser: authStore.user?.email === item.email ? true : false
                       }}
                     >
                       Edit
@@ -119,4 +122,4 @@ const DashboardUsers: FC = () => {
   );
 };
 
-export default DashboardUsers;
+export default observer(DashboardUsers);
