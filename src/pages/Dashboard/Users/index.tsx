@@ -69,7 +69,7 @@ const DashboardUsers: FC = () => {
               <tr>
                 <th>Email</th>
                 <th>Full name</th>
-                <th>Access</th>
+                <th>Role</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -82,7 +82,7 @@ const DashboardUsers: FC = () => {
                       ? `${item.first_name} ${item.last_name}`
                       : '/'}
                   </td>
-                  <td>{item.access}</td>
+                  <td>{item.role?.name ?? '/'}</td>
                   <td>
                     <Link
                       className={
@@ -96,7 +96,7 @@ const DashboardUsers: FC = () => {
                         first_name: item.first_name,
                         last_name: item.last_name,
                         email: item.email,
-                        access: item.access,
+                        role_id: item.role?.id,
                         isActiveUser:
                           authStore.user?.email === item.email ? true : false,
                       }}

@@ -6,7 +6,7 @@ import { apiRequest } from './Api';
 export const createProduct = async (data: CreateUpdateProductFields) =>
   apiRequest<CreateUpdateProductFields, void>(
     'post',
-    apiRoutes.PRODUCT_PREFIX,
+    apiRoutes.PRODUCTS_PREFIX,
     data,
   );
 
@@ -16,6 +16,6 @@ export const updateProduct = async (
 ) =>
   apiRequest<CreateUpdateProductFields, void>(
     'patch',
-    `${apiRoutes.PRODUCT_PREFIX}/${id}`,
+    `${apiRoutes.PRODUCTS_PREFIX}/${id}`,
     data,
   );

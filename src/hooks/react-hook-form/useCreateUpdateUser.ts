@@ -3,18 +3,13 @@ import { UserType } from 'models/Auth';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-export enum UserAccess {
-  USER = 'user',
-  ADMIN = 'admin',
-}
-
 export interface CreateUserFields {
   first_name?: string;
   last_name?: string;
   email: string;
   password: string;
   confirm_password: string;
-  access: UserAccess;
+  role_id: string;
 }
 
 export interface UpdateUserFields {
@@ -23,7 +18,7 @@ export interface UpdateUserFields {
   email: string;
   password?: string;
   confirm_password?: string;
-  access: UserAccess;
+  role_id: string;
 }
 
 interface Props {
@@ -42,23 +37,20 @@ export const useCreateUpdateUserForm = ({ defaultValues }: Props) => {
       )
       .required(),
     confirm_password: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords do not match')
+      .oneOf([Yup.ref('password'), ''], 'Passwords do not match')
       .required('Passwords do not match'),
-    access: Yup.string()
-      .default(UserAccess.USER)
-      .oneOf([UserAccess.USER, UserAccess.ADMIN], 'Invalid value')
-      .required('Access field is required'),
+    role_id: Yup.string().required('Role field is required'),
   });
 
   const UpdateUserSchema = Yup.object().shape({
     first_name: Yup.string().notRequired(),
     last_name: Yup.string().notRequired(),
-    email: Yup.string().email().notRequired(),
+    email: Yup.string().email().required('Email field is required'),
     password: Yup.string().notRequired(),
     confirm_password: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords do not match')
+      .oneOf([Yup.ref('password'), ''], 'Passwords do not match')
       .notRequired(),
-    access: Yup.string().notRequired(),
+    role_id: Yup.string().notRequired(),
   });
 
   const {
@@ -73,7 +65,7 @@ export const useCreateUpdateUserForm = ({ defaultValues }: Props) => {
       email: '',
       password: '',
       confirm_password: '',
-      access: UserAccess.USER,
+      role_id: '',
       ...defaultValues,
     },
     mode: 'onSubmit',

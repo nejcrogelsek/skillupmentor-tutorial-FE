@@ -2,7 +2,6 @@ import {
   CreateUserFields,
   UpdateUserFields,
   useCreateUpdateUserForm,
-  UserAccess,
 } from 'hooks/react-hook-form/useCreateUpdateUser';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -19,12 +18,16 @@ import { routes } from 'constants/routesConstants';
 import { UserType } from 'models/Auth';
 import authStore from 'stores/auth.store';
 import Avatar from 'react-avatar';
+import { useQuery } from 'react-query';
+import { Role } from 'models/Role';
 
 interface Props {
   defaultValues?: UserType & { isActiveUser?: boolean };
 }
 
 const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
+  console.log('rerender');
+  const { data: rolesData } = useQuery(['roles'], API.fetchRoles);
   const { handleSubmit, errors, control } = useCreateUpdateUserForm({
     defaultValues,
   });
@@ -120,6 +123,8 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
     }
   }, [file]);
 
+  console.log(rolesData?.data);
+
   return (
     <>
       <Form className="register-form" onSubmit={onSubmit}>
@@ -209,24 +214,25 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
         />
         <Controller
           control={control}
-          name="access"
+          name="role_id"
           render={({ field }) => (
             <Form.Group className="mb-3">
-              <FormLabel htmlFor="access">Access</FormLabel>
+              <FormLabel htmlFor="role_id">Role</FormLabel>
               <Form.Select
                 {...field}
-                aria-label="Access"
-                aria-describedby="access"
+                aria-label="Role"
+                aria-describedby="role_id"
                 className={
-                  errors.access ? 'form-control is-invalid' : 'form-control'
+                  errors.role_id ? 'form-control is-invalid' : 'form-control'
                 }
               >
-                <option value={UserAccess.USER}>User</option>
-                <option value={UserAccess.ADMIN}>Admin</option>
+                {rolesData?.data.map((role: Role, index: number) => (
+                  <option key={index} value={role.id}>{role.name}</option>
+                ))}
               </Form.Select>
-              {errors.access && (
+              {errors.role_id && (
                 <div className="invalid-feedback text-danger">
-                  {errors.access.message}
+                  {errors.role_id.message}
                 </div>
               )}
             </Form.Group>
