@@ -30,6 +30,10 @@ const useAuth = () => {
           authStore.login(response.data);
           clearInterval(timerRef.current);
           timerRef.current = setInterval(refreshTokens, 840000);
+        } else if (response.data.statusCode === StatusCode.UNAUTHORIZED) {
+          userStorage.clearUser();
+          authStore.signout();
+          navigate('/');
         }
       })();
     }

@@ -1,4 +1,3 @@
-import LoadingProvider from 'components/providers/LoadingProvider';
 import { FC, lazy, Suspense } from 'react';
 import { Route, RouteProps, Routes as Switch } from 'react-router-dom';
 
@@ -124,7 +123,7 @@ export const AppRoutes: AppRoute[] = [
 
 const Routes: FC = () => {
   return (
-    <Suspense fallback={<LoadingProvider loading={true} />}>
+    <Suspense fallback={<div>Loading...</div>}>
       <Switch>
         {AppRoutes.map((r) => {
           const { type } = r;

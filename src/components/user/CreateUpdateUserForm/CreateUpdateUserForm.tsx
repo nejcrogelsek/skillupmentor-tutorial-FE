@@ -4,7 +4,7 @@ import {
   useCreateUpdateUserForm,
   UserAccess,
 } from 'hooks/react-hook-form/useCreateUpdateUser';
-import { FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ToastContainer from 'react-bootstrap/ToastContainer';
@@ -18,6 +18,7 @@ import { observer } from 'mobx-react';
 import { routes } from 'constants/routesConstants';
 import { UserType } from 'models/Auth';
 import authStore from 'stores/auth.store';
+import Avatar from 'react-avatar';
 
 interface Props {
   defaultValues?: UserType & { isActiveUser?: boolean };
@@ -30,6 +31,9 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
   const navigate = useNavigate();
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
+
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const onSubmit = handleSubmit(
     async (data: CreateUserFields | UpdateUserFields) => {
@@ -60,16 +64,79 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      if (defaultValues?.isActiveUser) {
-        authStore.login(response.data);
+      if (!file) {
+        if (defaultValues?.isActiveUser) {
+          authStore.login(response.data);
+        }
+        navigate(`${routes.DASHBOARD_PREFIX}/users`);
+        return;
       }
-      navigate(`${routes.DASHBOARD_PREFIX}/users`);
+      // Upload file
+      const formData = new FormData();
+      formData.append('avatar', file, file.name);
+      const fileResponse = await API.uploadAvatar(formData);
+      if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else if (
+        fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+      ) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else {
+        // Get user with avatar image
+        const userResponse = await API.fetchUser();
+        if (
+          userResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+        ) {
+          setApiError(userResponse.data.message);
+          setShowError(true);
+        } else {
+          if (defaultValues?.isActiveUser) {
+            authStore.login(userResponse.data);
+          }
+          navigate(`${routes.DASHBOARD_PREFIX}/users`);
+        }
+      }
     }
   };
+
+  const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (target.files) {
+      const file = target.files[0];
+      setFile(file);
+    }
+  };
+
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+  }, [file]);
 
   return (
     <>
       <Form className="register-form" onSubmit={onSubmit}>
+        <Form.Group className="d-flex flex-column justify-content-center align-items-center">
+          <FormLabel htmlFor="avatar" id="avatar-p">
+            <Avatar round src={preview as string} alt="Avatar" />
+          </FormLabel>
+          <input
+            onChange={handleFileChange}
+            id="avatar"
+            name="avatar"
+            type="file"
+            aria-label="Avatar"
+            aria-describedby="first_name"
+            className="d-none"
+          />
+        </Form.Group>
         <Controller
           control={control}
           name="first_name"
