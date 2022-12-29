@@ -40,8 +40,11 @@ export const updateUser = async (data: UpdateUserFields, id: string) =>
 export const signout = async () =>
   apiRequest<undefined, void>('post', apiRoutes.SIGNOUT);
 
-export const fetchUsers = async () =>
-  apiRequest<null, UserType[]>('get', apiRoutes.FETCH_USERS);
+export const fetchUsers = async (pageNumber: number) =>
+  apiRequest<null, UserType[]>(
+    'get',
+    `${apiRoutes.FETCH_USERS}?page=${pageNumber}`,
+  );
 
 export const refreshTokens = async () =>
   apiRequest<undefined, UserType>('get', apiRoutes.REFRESH_TOKENS);

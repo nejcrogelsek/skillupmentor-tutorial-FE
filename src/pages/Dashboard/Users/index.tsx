@@ -15,7 +15,11 @@ const DashboardUsers: FC = () => {
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
   const { isMobile } = useMediaQuery(768);
-  const { data, isLoading, refetch } = useQuery(['fetchUsers'], API.fetchUsers);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const { data, isLoading, refetch, isFetching } = useQuery(['fetchUsers', pageNumber], () => API.fetchUsers(pageNumber), {
+    keepPreviousData: true,
+    refetchOnWindowFocus: false
+  });
   const { mutate } = useMutation((id: string) => API.deleteUser(id), {
     onSuccess: (response) => {
       if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
@@ -55,7 +59,7 @@ const DashboardUsers: FC = () => {
         <div>Loading...</div>
       ) : (
         <>
-          {data.data.length === 0 && <p>No users found.</p>}
+          {data?.data.data.length === 0 && <p>No users found.</p>}
           <Table striped bordered hover responsive>
             <thead>
               <tr>
@@ -66,7 +70,7 @@ const DashboardUsers: FC = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.data?.map((item: UserType, index: number) => (
+              {data?.data.data.map((item: UserType, index: number) => (
                 <tr key={index}>
                   <td>{item.email}</td>
                   <td>
@@ -108,6 +112,14 @@ const DashboardUsers: FC = () => {
           </Table>
         </>
       )}
+      <div>
+        <Button onClick={() => setPageNumber((prev) => prev - 1)} disabled={pageNumber === 1}>
+          Prev page
+        </Button>
+        <Button onClick={() => setPageNumber((prev) => prev + 1)} disabled={pageNumber === data?.data.meta.last_page}>
+          Next page
+        </Button>
+      </div>
       {showError && (
         <ToastContainer className="p-3" position="top-end">
           <Toast onClose={() => setShowError(false)} show={showError}>
