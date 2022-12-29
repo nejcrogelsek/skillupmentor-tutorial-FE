@@ -37,7 +37,7 @@ const useAuth = () => {
         }
       })();
     }
-  }, []);
+  });
 
   useEffect(() => {
     if (user) {

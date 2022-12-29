@@ -11,7 +11,6 @@ import authStore from 'stores/auth.store';
 import * as API from 'api/Api';
 import { StatusCode } from 'constants/errorConstants';
 import { observer } from 'mobx-react';
-import { UserType } from 'models/Auth';
 
 const LoginForm: FC = () => {
   const navigate = useNavigate();

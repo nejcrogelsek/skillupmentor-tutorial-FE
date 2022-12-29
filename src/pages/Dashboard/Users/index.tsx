@@ -16,10 +16,14 @@ const DashboardUsers: FC = () => {
   const [showError, setShowError] = useState(false);
   const { isMobile } = useMediaQuery(768);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const { data, isLoading, refetch, isFetching } = useQuery(['fetchUsers', pageNumber], () => API.fetchUsers(pageNumber), {
-    keepPreviousData: true,
-    refetchOnWindowFocus: false
-  });
+  const { data, isLoading, refetch } = useQuery(
+    ['fetchUsers', pageNumber],
+    () => API.fetchUsers(pageNumber),
+    {
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    },
+  );
   const { mutate } = useMutation((id: string) => API.deleteUser(id), {
     onSuccess: (response) => {
       if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
@@ -93,7 +97,8 @@ const DashboardUsers: FC = () => {
                         last_name: item.last_name,
                         email: item.email,
                         access: item.access,
-                        isActiveUser: authStore.user?.email === item.email ? true : false
+                        isActiveUser:
+                          authStore.user?.email === item.email ? true : false,
                       }}
                     >
                       Edit
@@ -113,10 +118,16 @@ const DashboardUsers: FC = () => {
         </>
       )}
       <div>
-        <Button onClick={() => setPageNumber((prev) => prev - 1)} disabled={pageNumber === 1}>
+        <Button
+          onClick={() => setPageNumber((prev) => prev - 1)}
+          disabled={pageNumber === 1}
+        >
           Prev page
         </Button>
-        <Button onClick={() => setPageNumber((prev) => prev + 1)} disabled={pageNumber === data?.data.meta.last_page}>
+        <Button
+          onClick={() => setPageNumber((prev) => prev + 1)}
+          disabled={pageNumber === data?.data.meta.last_page}
+        >
           Next page
         </Button>
       </div>
