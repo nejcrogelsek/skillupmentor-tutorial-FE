@@ -2,7 +2,7 @@ import {
   CreateUpdateProductFields,
   useCreateUpdateProductForm,
 } from 'hooks/react-hook-form/useCreateUpdateProduct';
-import { FC, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ToastContainer from 'react-bootstrap/ToastContainer';
@@ -29,12 +29,16 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
   const [apiError, setApiError] = useState('');
   const [showError, setShowError] = useState(false);
 
+  const [file, setFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState(false);
+
   const onSubmit = handleSubmit(async (data: CreateUpdateProductFields) => {
     if (!defaultValues) await handleAdd(data);
     else await handleUpdate(data);
   });
 
   const handleAdd = async (data: CreateUpdateProductFields) => {
+    if (!file) return;
     const response = await API.createProduct(data);
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
       setApiError(response.data.message);
@@ -43,7 +47,21 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      navigate(`${routes.DASHBOARD_PREFIX}/products`);
+      // Upload file
+      const formData = new FormData();
+      formData.append('image', file, file.name);
+      const fileResponse = await API.uploadProductImage(formData, response.data.id);
+      if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else if (
+        fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+      ) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else {
+        navigate(`${routes.DASHBOARD_PREFIX}/products`);
+      }
     }
   };
 
@@ -56,10 +74,37 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      if (defaultValues?.isActiveUser) {
-        authStore.login(response.data);
+      if (!file) {
+        navigate(`${routes.DASHBOARD_PREFIX}/products`);
+        return;
       }
-      navigate(`${routes.DASHBOARD_PREFIX}/products`);
+      // Upload file
+      const formData = new FormData();
+      formData.append('image', file, file.name);
+      const fileResponse = await API.uploadProductImage(formData, response.data.id);
+      if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else if (
+        fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+      ) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else {
+        navigate(`${routes.DASHBOARD_PREFIX}/products`);
+      }
+    }
+  };
+
+  const handleFileError = () => {
+    if (!file) setFileError(true);
+    else setFileError(false);
+  };
+
+  const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (target.files) {
+      const file = target.files[0];
+      setFile(file);
     }
   };
 
@@ -68,22 +113,45 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       <Form className="register-form" onSubmit={onSubmit}>
         <Controller
           control={control}
-          name="name"
+          name="title"
           render={({ field }) => (
             <Form.Group className="mb-3">
-              <FormLabel htmlFor="name">Name</FormLabel>
+              <FormLabel htmlFor="title">Title</FormLabel>
               <input
                 {...field}
                 type="text"
-                aria-label="Name"
-                aria-describedby="name"
+                aria-label="Title"
+                aria-describedby="title"
                 className={
-                  errors.name ? 'form-control is-invalid' : 'form-control'
+                  errors.title ? 'form-control is-invalid' : 'form-control'
                 }
               />
-              {errors.name && (
+              {errors.title && (
                 <div className="invalid-feedback text-danger">
-                  {errors.name.message}
+                  {errors.title.message}
+                </div>
+              )}
+            </Form.Group>
+          )}
+        />
+        <Controller
+          control={control}
+          name="description"
+          render={({ field }) => (
+            <Form.Group className="mb-3">
+              <FormLabel htmlFor="description">Description</FormLabel>
+              <input
+                {...field}
+                type="text"
+                aria-label="Description"
+                aria-describedby="description"
+                className={
+                  errors.description ? 'form-control is-invalid' : 'form-control'
+                }
+              />
+              {errors.description && (
+                <div className="invalid-feedback text-danger">
+                  {errors.description.message}
                 </div>
               )}
             </Form.Group>
@@ -112,31 +180,25 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
             </Form.Group>
           )}
         />
-        <Controller
-          control={control}
-          name="image_path"
-          render={({ field }) => (
-            <Form.Group className="mb-3">
-              <FormLabel htmlFor="image_path">Product image</FormLabel>
-              <input
-                {...field}
-                type="file"
-                aria-label="Product image"
-                aria-describedby="image_path"
-                className={
-                  errors.image_path ? 'form-control is-invalid' : 'form-control'
-                }
-              />
-              {errors.image_path && (
-                <div className="invalid-feedback text-danger">
-                  {errors.image_path.message}
-                </div>
-              )}
-            </Form.Group>
+        <Form.Group className='mb-3'>
+          <FormLabel htmlFor="image">Product image</FormLabel>
+          <Form.Control
+            onChange={handleFileChange}
+            id="image"
+            name="image"
+            type="file"
+            aria-label="Product image"
+            aria-describedby="image"
+            className={fileError ? 'form-control is-invalid' : 'form-control'}
+          />
+          {fileError && (
+            <div className="d-block invalid-feedback text-danger mb-2">
+              Field product image is required
+            </div>
           )}
-        />
-        <Button className="w-100" type="submit">
-          {defaultValues ? 'Update user' : 'Create new user'}
+        </Form.Group>
+        <Button className="w-100" type="submit" onMouseDown={defaultValues ? undefined : handleFileError}>
+          {defaultValues ? 'Update product' : 'Create new product'}
         </Button>
       </Form>
       {showError && (

@@ -53,7 +53,7 @@ const RegisterForm: FC = () => {
         // Upload file
         const formData = new FormData();
         formData.append('avatar', file, file.name);
-        const fileResponse = await API.uploadAvatar(formData);
+        const fileResponse = await API.uploadAvatar(formData, loginResponse.data.id);
         if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
           setApiError(fileResponse.data.message);
           setShowError(true);
@@ -122,7 +122,7 @@ const RegisterForm: FC = () => {
           />
           {fileError && (
             <div className="d-block invalid-feedback text-danger mb-2 text-center">
-              Polje avatar je obvezno
+              Field avatar is required
             </div>
           )}
         </Form.Group>

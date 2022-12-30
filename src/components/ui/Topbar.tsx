@@ -39,7 +39,7 @@ const Topbar: FC = () => {
             <Link
               className="btn btn-dark text-decoration-none text-light me-3"
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-              state={{ ...authStore.user }}
+              state={{ ...authStore.user, isActiveUser: true }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

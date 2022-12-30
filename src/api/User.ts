@@ -24,8 +24,12 @@ export const register = async (data: RegisterUserFields) =>
 export const createUser = async (data: CreateUserFields) =>
   apiRequest<CreateUserFields, void>('post', apiRoutes.USERS_PREFIX, data);
 
-export const uploadAvatar = async (formData: FormData) =>
-  apiRequest<FormData, void>('post', apiRoutes.UPLOAD_AVATAR_IMAGE, formData);
+export const uploadAvatar = async (formData: FormData, id: string) =>
+  apiRequest<FormData, void>(
+    'post',
+    `${apiRoutes.UPLOAD_AVATAR_IMAGE}/${id}`,
+    formData,
+  );
 
 export const getAvatar = async () =>
   apiRequest<undefined, void>('get', apiRoutes.GET_AVATAR_IMAGE);

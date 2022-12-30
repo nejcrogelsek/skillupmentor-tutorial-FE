@@ -26,7 +26,6 @@ interface Props {
 }
 
 const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
-  console.log('rerender');
   const { data: rolesData } = useQuery(['roles'], API.fetchRoles);
   const { handleSubmit, errors, control } = useCreateUpdateUserForm({
     defaultValues,
@@ -37,6 +36,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
 
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [fileError, setFileError] = useState(false);
 
   const onSubmit = handleSubmit(
     async (data: CreateUserFields | UpdateUserFields) => {
@@ -46,6 +46,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
   );
 
   const handleAdd = async (data: CreateUserFields) => {
+    if (!file) return;
     const response = await API.createUser(data);
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
       setApiError(response.data.message);
@@ -54,7 +55,21 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       setApiError(response.data.message);
       setShowError(true);
     } else {
-      navigate(`${routes.DASHBOARD_PREFIX}/users`);
+      // Upload file
+      const formData = new FormData();
+      formData.append('avatar', file, file.name);
+      const fileResponse = await API.uploadAvatar(formData, response.data.id);
+      if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else if (
+        fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+      ) {
+        setApiError(fileResponse.data.message);
+        setShowError(true);
+      } else {
+        navigate(`${routes.DASHBOARD_PREFIX}/users`);
+      }
     }
   };
 
@@ -77,7 +92,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       // Upload file
       const formData = new FormData();
       formData.append('avatar', file, file.name);
-      const fileResponse = await API.uploadAvatar(formData);
+      const fileResponse = await API.uploadAvatar(formData, response.data.id);
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
         setApiError(fileResponse.data.message);
         setShowError(true);
@@ -87,21 +102,26 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
         setApiError(fileResponse.data.message);
         setShowError(true);
       } else {
-        // Get user with avatar image
-        const userResponse = await API.fetchUser();
-        if (
-          userResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
-        ) {
-          setApiError(userResponse.data.message);
-          setShowError(true);
-        } else {
-          if (defaultValues?.isActiveUser) {
+        if (defaultValues?.isActiveUser) {
+          // Get user with avatar image
+          const userResponse = await API.fetchUser();
+          if (
+            userResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
+          ) {
+            setApiError(userResponse.data.message);
+            setShowError(true);
+          } else {
             authStore.login(userResponse.data);
           }
-          navigate(`${routes.DASHBOARD_PREFIX}/users`);
         }
+        navigate(`${routes.DASHBOARD_PREFIX}/users`);
       }
     }
+  };
+
+  const handleFileError = () => {
+    if (!file) setFileError(true);
+    else setFileError(false);
   };
 
   const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -116,6 +136,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
+        setFileError(false);
       };
       reader.readAsDataURL(file);
     } else {
@@ -123,14 +144,12 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
     }
   }, [file]);
 
-  console.log(rolesData?.data);
-
   return (
     <>
       <Form className="register-form" onSubmit={onSubmit}>
         <Form.Group className="d-flex flex-column justify-content-center align-items-center">
           <FormLabel htmlFor="avatar" id="avatar-p">
-            <Avatar round src={preview as string} alt="Avatar" />
+            <Avatar round src={preview ? preview : defaultValues && `http://localhost:8080/files/${defaultValues?.avatar}`} alt="Avatar" />
           </FormLabel>
           <input
             onChange={handleFileChange}
@@ -141,6 +160,11 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
             aria-describedby="first_name"
             className="d-none"
           />
+          {fileError && (
+            <div className="d-block invalid-feedback text-danger mb-2 text-center">
+              Field avatar is required
+            </div>
+          )}
         </Form.Group>
         <Controller
           control={control}
@@ -226,6 +250,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
                   errors.role_id ? 'form-control is-invalid' : 'form-control'
                 }
               >
+                <option></option>
                 {rolesData?.data.map((role: Role, index: number) => (
                   <option key={index} value={role.id}>{role.name}</option>
                 ))}
@@ -287,7 +312,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
             </Form.Group>
           )}
         />
-        <Button className="w-100" type="submit">
+        <Button className="w-100" type="submit" onMouseDown={defaultValues ? undefined : handleFileError}>
           {defaultValues ? 'Update user' : 'Create new user'}
         </Button>
       </Form>

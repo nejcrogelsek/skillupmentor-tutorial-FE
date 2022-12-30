@@ -63,75 +63,79 @@ const DashboardUsers: FC = () => {
         <div>Loading...</div>
       ) : (
         <>
-          {data?.data.data.length === 0 && <p>No users found.</p>}
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Full name</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.data.data.map((item: UserType, index: number) => (
-                <tr key={index}>
-                  <td>{item.email}</td>
-                  <td>
-                    {item.first_name || item.last_name
-                      ? `${item.first_name} ${item.last_name}`
-                      : '/'}
-                  </td>
-                  <td>{item.role?.name ?? '/'}</td>
-                  <td>
-                    <Link
-                      className={
-                        isMobile
-                          ? 'btn btn-warning btn-sm me-2 mb-2'
-                          : 'btn btn-warning btn-sm me-2'
-                      }
-                      to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-                      state={{
-                        id: item.id,
-                        first_name: item.first_name,
-                        last_name: item.last_name,
-                        email: item.email,
-                        role_id: item.role?.id,
-                        isActiveUser:
-                          authStore.user?.email === item.email ? true : false,
-                      }}
-                    >
-                      Edit
-                    </Link>
-                    <Button
-                      className={isMobile ? 'btn-danger mb-2' : 'btn-danger'}
-                      size="sm"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          {data?.data.data.length === 0 ? <p>No users found.</p> : (
+            <>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Full name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.data.data.map((item: UserType, index: number) => (
+                    <tr key={index}>
+                      <td>{item.email}</td>
+                      <td>
+                        {item.first_name || item.last_name
+                          ? `${item.first_name} ${item.last_name}`
+                          : '/'}
+                      </td>
+                      <td>{item.role?.name ?? '/'}</td>
+                      <td>
+                        <Link
+                          className={
+                            isMobile
+                              ? 'btn btn-warning btn-sm me-2 mb-2'
+                              : 'btn btn-warning btn-sm me-2'
+                          }
+                          to={`${routes.DASHBOARD_PREFIX}/users/edit`}
+                          state={{
+                            id: item.id,
+                            first_name: item.first_name,
+                            last_name: item.last_name,
+                            email: item.email,
+                            role_id: item.role?.id,
+                            avatar: item.avatar,
+                            isActiveUser:
+                              authStore.user?.email === item.email ? true : false,
+                          }}
+                        >
+                          Edit
+                        </Link>
+                        <Button
+                          className={isMobile ? 'btn-danger mb-2' : 'btn-danger'}
+                          size="sm"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              <div>
+                <Button
+                  className='me-2'
+                  onClick={() => setPageNumber((prev) => prev - 1)}
+                  disabled={pageNumber === 1}
+                >
+                  Prev page
+                </Button>
+                <Button
+                  onClick={() => setPageNumber((prev) => prev + 1)}
+                  disabled={pageNumber === data?.data.meta.last_page}
+                >
+                  Next page
+                </Button>
+              </div>
+            </>
+          )}
         </>
       )}
-      <div>
-        <Button
-          className='me-2'
-          onClick={() => setPageNumber((prev) => prev - 1)}
-          disabled={pageNumber === 1}
-        >
-          Prev page
-        </Button>
-        <Button
-          onClick={() => setPageNumber((prev) => prev + 1)}
-          disabled={pageNumber === data?.data.meta.last_page}
-        >
-          Next page
-        </Button>
-      </div>
       {showError && (
         <ToastContainer className="p-3" position="top-end">
           <Toast onClose={() => setShowError(false)} show={showError}>
