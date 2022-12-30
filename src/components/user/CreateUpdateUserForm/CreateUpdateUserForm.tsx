@@ -19,7 +19,7 @@ import { UserType } from 'models/Auth';
 import authStore from 'stores/auth.store';
 import Avatar from 'react-avatar';
 import { useQuery } from 'react-query';
-import { Role } from 'models/Role';
+import { RoleType } from 'models/Role';
 
 interface Props {
   defaultValues?: UserType & { isActiveUser?: boolean };
@@ -149,7 +149,16 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       <Form className="register-form" onSubmit={onSubmit}>
         <Form.Group className="d-flex flex-column justify-content-center align-items-center">
           <FormLabel htmlFor="avatar" id="avatar-p">
-            <Avatar round src={preview ? preview : defaultValues && `http://localhost:8080/files/${defaultValues?.avatar}`} alt="Avatar" />
+            <Avatar
+              round
+              src={
+                preview
+                  ? preview
+                  : defaultValues &&
+                    `http://localhost:8080/files/${defaultValues?.avatar}`
+              }
+              alt="Avatar"
+            />
           </FormLabel>
           <input
             onChange={handleFileChange}
@@ -251,8 +260,10 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
                 }
               >
                 <option></option>
-                {rolesData?.data.map((role: Role, index: number) => (
-                  <option key={index} value={role.id}>{role.name}</option>
+                {rolesData?.data.map((role: RoleType, index: number) => (
+                  <option key={index} value={role.id}>
+                    {role.name}
+                  </option>
                 ))}
               </Form.Select>
               {errors.role_id && (
@@ -312,7 +323,11 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
             </Form.Group>
           )}
         />
-        <Button className="w-100" type="submit" onMouseDown={defaultValues ? undefined : handleFileError}>
+        <Button
+          className="w-100"
+          type="submit"
+          onMouseDown={defaultValues ? undefined : handleFileError}
+        >
           {defaultValues ? 'Update user' : 'Create new user'}
         </Button>
       </Form>

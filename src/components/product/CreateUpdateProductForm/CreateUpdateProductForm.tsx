@@ -14,7 +14,6 @@ import * as API from 'api/Api';
 import { StatusCode } from 'constants/errorConstants';
 import { observer } from 'mobx-react';
 import { routes } from 'constants/routesConstants';
-import authStore from 'stores/auth.store';
 import { ProductType } from 'models/Product';
 
 interface Props {
@@ -50,7 +49,10 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       // Upload file
       const formData = new FormData();
       formData.append('image', file, file.name);
-      const fileResponse = await API.uploadProductImage(formData, response.data.id);
+      const fileResponse = await API.uploadProductImage(
+        formData,
+        response.data.id,
+      );
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
         setApiError(fileResponse.data.message);
         setShowError(true);
@@ -81,7 +83,10 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
       // Upload file
       const formData = new FormData();
       formData.append('image', file, file.name);
-      const fileResponse = await API.uploadProductImage(formData, response.data.id);
+      const fileResponse = await API.uploadProductImage(
+        formData,
+        response.data.id,
+      );
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
         setApiError(fileResponse.data.message);
         setShowError(true);
@@ -146,7 +151,9 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
                 aria-label="Description"
                 aria-describedby="description"
                 className={
-                  errors.description ? 'form-control is-invalid' : 'form-control'
+                  errors.description
+                    ? 'form-control is-invalid'
+                    : 'form-control'
                 }
               />
               {errors.description && (
@@ -180,7 +187,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
             </Form.Group>
           )}
         />
-        <Form.Group className='mb-3'>
+        <Form.Group className="mb-3">
           <FormLabel htmlFor="image">Product image</FormLabel>
           <Form.Control
             onChange={handleFileChange}
@@ -197,7 +204,11 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
             </div>
           )}
         </Form.Group>
-        <Button className="w-100" type="submit" onMouseDown={defaultValues ? undefined : handleFileError}>
+        <Button
+          className="w-100"
+          type="submit"
+          onMouseDown={defaultValues ? undefined : handleFileError}
+        >
           {defaultValues ? 'Update product' : 'Create new product'}
         </Button>
       </Form>

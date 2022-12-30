@@ -1,7 +1,7 @@
 import 'bootstrap/js/src/collapse.js';
 import { routes } from 'constants/routesConstants';
 import { FC, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import authStore from 'stores/auth.store';

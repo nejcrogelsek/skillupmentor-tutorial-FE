@@ -2,7 +2,10 @@ import DashboardLayout from 'components/ui/DashboardLayout';
 import { routes } from 'constants/routesConstants';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { FC, useState } from 'react';
-import { Button, Table, Toast, ToastContainer } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import Toast from 'react-bootstrap/Toast';
 import { useMutation, useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import * as API from 'api/Api';
@@ -61,7 +64,9 @@ const DashboardProducts: FC = () => {
         <div>Loading...</div>
       ) : (
         <>
-          {data?.data.data.length === 0 ? <p>No products found.</p> : (
+          {data?.data.data.length === 0 ? (
+            <p>No products found.</p>
+          ) : (
             <>
               <Table striped bordered hover responsive>
                 <thead>
@@ -76,7 +81,13 @@ const DashboardProducts: FC = () => {
                 <tbody>
                   {data?.data.data.map((item: ProductType, index: number) => (
                     <tr key={index}>
-                      <td><img width={100} src={`http://localhost:8080/files/${item.image}`} alt={item.title} /></td>
+                      <td>
+                        <img
+                          width={100}
+                          src={`http://localhost:8080/files/${item.image}`}
+                          alt={item.title}
+                        />
+                      </td>
                       <td>{item.title}</td>
                       <td>{item.description}</td>
                       <td>{item.price}€</td>
@@ -89,13 +100,15 @@ const DashboardProducts: FC = () => {
                           }
                           to={`${routes.DASHBOARD_PREFIX}/products/edit`}
                           state={{
-                            ...item
+                            ...item,
                           }}
                         >
                           Edit
                         </Link>
                         <Button
-                          className={isMobile ? 'btn-danger mb-2' : 'btn-danger'}
+                          className={
+                            isMobile ? 'btn-danger mb-2' : 'btn-danger'
+                          }
                           size="sm"
                           onClick={() => handleDelete(item.id)}
                         >
@@ -106,21 +119,23 @@ const DashboardProducts: FC = () => {
                   ))}
                 </tbody>
               </Table>
-              <div>
-                <Button
-                  className='me-2'
-                  onClick={() => setPageNumber((prev) => prev - 1)}
-                  disabled={pageNumber === 1}
-                >
-                  Prev page
-                </Button>
-                <Button
-                  onClick={() => setPageNumber((prev) => prev + 1)}
-                  disabled={pageNumber === data?.data.meta.last_page}
-                >
-                  Next page
-                </Button>
-              </div>
+              {data?.data.meta.last_page > 1 && (
+                <div>
+                  <Button
+                    className="me-2"
+                    onClick={() => setPageNumber((prev) => prev - 1)}
+                    disabled={pageNumber === 1}
+                  >
+                    Prev page
+                  </Button>
+                  <Button
+                    onClick={() => setPageNumber((prev) => prev + 1)}
+                    disabled={pageNumber === data?.data.meta.last_page}
+                  >
+                    Next page
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </>

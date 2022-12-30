@@ -1,6 +1,6 @@
 import DashboardLayout from 'components/ui/DashboardLayout';
 import { FC } from 'react';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
 const DashboardOrders: FC = () => {
   return (

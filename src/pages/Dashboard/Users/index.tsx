@@ -5,7 +5,10 @@ import { useMutation, useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import * as API from 'api/Api';
 import { UserType } from 'models/Auth';
-import { Button, Table, Toast, ToastContainer } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import Toast from 'react-bootstrap/Toast';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { StatusCode } from 'constants/errorConstants';
 import authStore from 'stores/auth.store';
@@ -63,7 +66,9 @@ const DashboardUsers: FC = () => {
         <div>Loading...</div>
       ) : (
         <>
-          {data?.data.data.length === 0 ? <p>No users found.</p> : (
+          {data?.data.data.length === 0 ? (
+            <p>No users found.</p>
+          ) : (
             <>
               <Table striped bordered hover responsive>
                 <thead>
@@ -100,13 +105,17 @@ const DashboardUsers: FC = () => {
                             role_id: item.role?.id,
                             avatar: item.avatar,
                             isActiveUser:
-                              authStore.user?.email === item.email ? true : false,
+                              authStore.user?.email === item.email
+                                ? true
+                                : false,
                           }}
                         >
                           Edit
                         </Link>
                         <Button
-                          className={isMobile ? 'btn-danger mb-2' : 'btn-danger'}
+                          className={
+                            isMobile ? 'btn-danger mb-2' : 'btn-danger'
+                          }
                           size="sm"
                           onClick={() => handleDelete(item.id)}
                         >
@@ -117,21 +126,23 @@ const DashboardUsers: FC = () => {
                   ))}
                 </tbody>
               </Table>
-              <div>
-                <Button
-                  className='me-2'
-                  onClick={() => setPageNumber((prev) => prev - 1)}
-                  disabled={pageNumber === 1}
-                >
-                  Prev page
-                </Button>
-                <Button
-                  onClick={() => setPageNumber((prev) => prev + 1)}
-                  disabled={pageNumber === data?.data.meta.last_page}
-                >
-                  Next page
-                </Button>
-              </div>
+              {data?.data.meta.last_page > 1 && (
+                <div>
+                  <Button
+                    className="me-2"
+                    onClick={() => setPageNumber((prev) => prev - 1)}
+                    disabled={pageNumber === 1}
+                  >
+                    Prev page
+                  </Button>
+                  <Button
+                    onClick={() => setPageNumber((prev) => prev + 1)}
+                    disabled={pageNumber === data?.data.meta.last_page}
+                  >
+                    Next page
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </>
