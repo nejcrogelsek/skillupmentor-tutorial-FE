@@ -11,4 +11,5 @@ export enum apiRoutes {
   GET_AVATAR_IMAGE = '/users/get/image',
   PRODUCTS_PREFIX = '/products',
   ROLES_PREFIX = '/roles',
+  ORDERS_PREFIX = '/orders',
 }

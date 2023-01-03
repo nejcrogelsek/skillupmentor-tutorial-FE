@@ -115,7 +115,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
 
   return (
     <>
-      <Form className="register-form" onSubmit={onSubmit}>
+      <Form className="product-form" onSubmit={onSubmit}>
         <Controller
           control={control}
           name="title"

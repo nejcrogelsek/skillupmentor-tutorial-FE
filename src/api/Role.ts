@@ -16,14 +16,14 @@ export const fetchPaginatedRoles = async (pageNumber: number) =>
 export const createRole = async (data: CreateUpdateRoleFields) =>
   apiRequest<CreateUpdateRoleFields, RoleType>(
     'post',
-    apiRoutes.PRODUCTS_PREFIX,
+    apiRoutes.ROLES_PREFIX,
     data,
   );
 
 export const updateRole = async (data: CreateUpdateRoleFields, id: string) =>
   apiRequest<CreateUpdateRoleFields, RoleType>(
     'patch',
-    `${apiRoutes.PRODUCTS_PREFIX}/${id}`,
+    `${apiRoutes.ROLES_PREFIX}/${id}`,
     data,
   );
 

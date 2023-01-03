@@ -146,7 +146,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
 
   return (
     <>
-      <Form className="register-form" onSubmit={onSubmit}>
+      <Form className="user-form" onSubmit={onSubmit}>
         <Form.Group className="d-flex flex-column justify-content-center align-items-center">
           <FormLabel htmlFor="avatar" id="avatar-p">
             <Avatar
@@ -155,7 +155,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
                 preview
                   ? preview
                   : defaultValues &&
-                    `http://localhost:8080/files/${defaultValues?.avatar}`
+                  `http://localhost:8080/files/${defaultValues?.avatar}`
               }
               alt="Avatar"
             />
