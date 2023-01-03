@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestHeaders } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 
 export async function apiRequest<D = Record<string, unknown>, R = unknown>(
   method: 'get' | 'delete' | 'head' | 'options' | 'post' | 'put' | 'patch',
@@ -6,7 +6,7 @@ export async function apiRequest<D = Record<string, unknown>, R = unknown>(
   input?: D,
   options?: {
     headers?: AxiosRequestHeaders;
-  },
+  } & AxiosRequestConfig,
 ) {
   try {
     const response = await Axios.request<R>({

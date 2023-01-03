@@ -5,6 +5,8 @@ import Table from 'react-bootstrap/Table';
 import * as API from 'api/Api';
 import { useQuery } from 'react-query';
 import { OrderType } from 'models/Order';
+import axios from 'axios';
+import { apiRoutes } from 'constants/apiConstants';
 
 const hide = {
   maxHeight: 0,
@@ -28,8 +30,23 @@ const DashboardOrders: FC = () => {
   );
   const [selected, setSelected] = useState('');
 
-  const select = (id: string) => {
+  const handleView = (id: string) => {
     setSelected(selected !== id ? id : '');
+  };
+
+  const handleExport = async () => {
+    const { data } = await axios.post(`http://localhost:8080${apiRoutes.ORDERS_PREFIX}/export`, {}, {
+      responseType: 'blob'
+    });
+    console.log('RESPONSE');
+    console.log(data);
+    // const { data } = await API.exportCSV();
+    const blob = new Blob(data, { type: 'text/csv' });
+    const url = window.URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'orders.csv';
+    link.click();
   };
 
   return (
@@ -38,7 +55,7 @@ const DashboardOrders: FC = () => {
         <h1 className="mb-4">Orders</h1>
         <Button
           className="btn-dark"
-          onClick={API.exportCSV}
+          onClick={handleExport}
         >
           Export
         </Button>
@@ -71,7 +88,7 @@ const DashboardOrders: FC = () => {
                           <Button
                             className='btn-dark'
                             size="sm"
-                            onClick={() => select(item.id)}
+                            onClick={() => handleView(item.id)}
                           >
                             View
                           </Button>
