@@ -14,6 +14,7 @@ interface Props {
 export const useCreateUpdateRole = ({ defaultValues }: Props) => {
   const CreateRoleSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
+    permissions: Yup.array().min(1),
   });
 
   const {
@@ -21,9 +22,11 @@ export const useCreateUpdateRole = ({ defaultValues }: Props) => {
     formState: { errors },
     reset,
     control,
+    register,
   } = useForm({
     defaultValues: {
       name: '',
+      permissions: [],
       ...defaultValues,
     },
     mode: 'onSubmit',
@@ -35,6 +38,7 @@ export const useCreateUpdateRole = ({ defaultValues }: Props) => {
     errors,
     reset,
     control,
+    register,
   };
 };
 

@@ -12,4 +12,5 @@ export enum apiRoutes {
   PRODUCTS_PREFIX = '/products',
   ROLES_PREFIX = '/roles',
   ORDERS_PREFIX = '/orders',
+  PERMISSIONS_PREFIX = '/permissions',
 }

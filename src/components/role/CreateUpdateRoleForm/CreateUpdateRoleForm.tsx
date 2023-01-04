@@ -2,7 +2,7 @@ import {
   CreateUpdateRoleFields,
   useCreateUpdateRole,
 } from 'hooks/react-hook-form/useCreateUpdateRole';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ToastContainer from 'react-bootstrap/ToastContainer';
@@ -14,14 +14,23 @@ import * as API from 'api/Api';
 import { StatusCode } from 'constants/errorConstants';
 import { observer } from 'mobx-react';
 import { routes } from 'constants/routesConstants';
-import { RoleType } from 'models/Role';
+import { PermissionType, RoleType } from 'models/Role';
+import { useQuery } from 'react-query';
 
 interface Props {
   defaultValues?: RoleType & { isActiveUser?: boolean };
 }
 
+interface StatePermissions extends PermissionType {
+  defaultChecked: boolean
+}
+
 const CreateUpdateRoleForm: FC<Props> = ({ defaultValues }) => {
-  const { handleSubmit, errors, control } = useCreateUpdateRole({
+  const [statePermissions, setStatePermissions] = useState<StatePermissions[]>([]);
+  const { data: permissionData } = useQuery(['permissions'], API.fetchPermissions, {
+    refetchOnWindowFocus: false
+  });
+  const { handleSubmit, errors, control, register } = useCreateUpdateRole({
     defaultValues,
   });
   const navigate = useNavigate();
@@ -59,6 +68,43 @@ const CreateUpdateRoleForm: FC<Props> = ({ defaultValues }) => {
     }
   };
 
+  useEffect(() => {
+    if (permissionData?.data.length > 0) {
+      const arrayOfPermissions: StatePermissions[] = [];
+      let includes = false;
+      if (defaultValues) {
+        for (let rootIndex = 0; rootIndex < permissionData.data.length; rootIndex++) {
+          for (let nestedIndex = 0; nestedIndex < defaultValues.permissions.length; nestedIndex++) {
+            if (permissionData.data[rootIndex].id === defaultValues.permissions[nestedIndex].id) {
+              includes = true;
+            }
+          }
+          if (includes) {
+            arrayOfPermissions.push({
+              ...permissionData.data[rootIndex],
+              defaultChecked: true
+            });
+          } else {
+            arrayOfPermissions.push({
+              ...permissionData.data[rootIndex],
+              defaultChecked: false
+            });
+          }
+          includes = false;
+        }
+      } else {
+        permissionData.data.forEach((p: PermissionType) => {
+          arrayOfPermissions.push({
+            ...p,
+            defaultChecked: false
+          });
+        });
+      }
+      setStatePermissions(arrayOfPermissions);
+    }
+  }, [permissionData, defaultValues]);
+
+
   return (
     <>
       <Form className="role-form" onSubmit={onSubmit}>
@@ -85,9 +131,28 @@ const CreateUpdateRoleForm: FC<Props> = ({ defaultValues }) => {
             </Form.Group>
           )}
         />
-        {/*TODO: permissions checkboxes */}
+        <FormLabel>Permissions</FormLabel>
+        <div className='d-flex'>
+          {statePermissions.map((permission: StatePermissions, index: number) => (
+            <div key={index} className='d-flex me-4'>
+              <input
+                type='checkbox'
+                {...register('permissions')}
+                value={permission.id}
+                defaultChecked={permission.defaultChecked}
+                className='me-2'
+              />
+              <label>{permission.name}</label>
+            </div>
+          ))}
+        </div>
+        {errors.permissions && (
+          <div className="invalid-feedback text-danger">
+            {errors.permissions.message} lalallalal long
+          </div>
+        )}
         <Button
-          className="w-100"
+          className="w-100 mt-4"
           type="submit"
         >
           {defaultValues ? 'Update role' : 'Create new role'}

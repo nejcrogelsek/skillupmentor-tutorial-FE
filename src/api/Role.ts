@@ -1,11 +1,14 @@
 import { apiRoutes } from 'constants/apiConstants';
 import { CreateUpdateRoleFields } from 'hooks/react-hook-form/useCreateUpdateRole';
-import { RoleType } from 'models/Role';
+import { PermissionType, RoleType } from 'models/Role';
 
 import { apiRequest } from './Api';
 
 export const fetchRoles = async () =>
   apiRequest<undefined, RoleType[]>('get', apiRoutes.ROLES_PREFIX);
+
+export const fetchPermissions = async () =>
+  apiRequest<undefined, PermissionType[]>('get', apiRoutes.PERMISSIONS_PREFIX);
 
 export const fetchPaginatedRoles = async (pageNumber: number) =>
   apiRequest<undefined, RoleType[]>(
