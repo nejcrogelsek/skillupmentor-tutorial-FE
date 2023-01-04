@@ -39,7 +39,15 @@ const Topbar: FC = () => {
             <Link
               className="btn btn-dark text-decoration-none text-light me-3"
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-              state={{ ...authStore.user, isActiveUser: true }}
+              state={{
+                id: authStore.user?.id,
+                first_name: authStore.user?.first_name,
+                last_name: authStore.user?.last_name,
+                email: authStore.user?.email,
+                role_id: authStore.user?.role?.id,
+                avatar: authStore.user?.avatar,
+                isActiveUser: true,
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -61,8 +69,12 @@ const Topbar: FC = () => {
               className="btn btn-dark text-decoration-none text-light me-3"
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
               state={{
-                ...authStore.user,
+                id: authStore.user?.id,
+                first_name: authStore.user?.first_name,
+                last_name: authStore.user?.last_name,
+                email: authStore.user?.email,
                 role_id: authStore.user?.role?.id,
+                avatar: authStore.user?.avatar,
                 isActiveUser: true,
               }}
             >
