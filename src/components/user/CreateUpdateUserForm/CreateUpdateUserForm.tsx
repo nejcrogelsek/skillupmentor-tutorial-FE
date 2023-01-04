@@ -2,147 +2,147 @@ import {
   CreateUserFields,
   UpdateUserFields,
   useCreateUpdateUserForm,
-} from 'hooks/react-hook-form/useCreateUpdateUser';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { Controller } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import FormLabel from 'react-bootstrap/FormLabel';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import { observer } from 'mobx-react';
-import { routes } from 'constants/routesConstants';
-import { UserType } from 'models/Auth';
-import authStore from 'stores/auth.store';
-import Avatar from 'react-avatar';
-import { useQuery } from 'react-query';
-import { RoleType } from 'models/Role';
+} from 'hooks/react-hook-form/useCreateUpdateUser'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { Controller } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import FormLabel from 'react-bootstrap/FormLabel'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import { observer } from 'mobx-react'
+import { routes } from 'constants/routesConstants'
+import { UserType } from 'models/Auth'
+import authStore from 'stores/auth.store'
+import Avatar from 'react-avatar'
+import { useQuery } from 'react-query'
+import { RoleType } from 'models/Role'
 
 interface Props {
-  defaultValues?: UserType & { isActiveUser?: boolean };
+  defaultValues?: UserType & { isActiveUser?: boolean }
 }
 
 const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
-  const { data: rolesData } = useQuery(['roles'], API.fetchRoles);
+  const { data: rolesData } = useQuery(['roles'], API.fetchRoles)
   const { handleSubmit, errors, control } = useCreateUpdateUserForm({
     defaultValues,
-  });
-  const navigate = useNavigate();
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
+  })
+  const navigate = useNavigate()
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
 
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [fileError, setFileError] = useState(false);
+  const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [fileError, setFileError] = useState(false)
 
   const onSubmit = handleSubmit(
     async (data: CreateUserFields | UpdateUserFields) => {
-      if (!defaultValues) await handleAdd(data as CreateUserFields);
-      else await handleUpdate(data as UpdateUserFields);
+      if (!defaultValues) await handleAdd(data as CreateUserFields)
+      else await handleUpdate(data as UpdateUserFields)
     },
-  );
+  )
 
   const handleAdd = async (data: CreateUserFields) => {
-    if (!file) return;
-    const response = await API.createUser(data);
+    if (!file) return
+    const response = await API.createUser(data)
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
       // Upload file
-      const formData = new FormData();
-      formData.append('avatar', file, file.name);
-      const fileResponse = await API.uploadAvatar(formData, response.data.id);
+      const formData = new FormData()
+      formData.append('avatar', file, file.name)
+      const fileResponse = await API.uploadAvatar(formData, response.data.id)
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else if (
         fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else {
-        navigate(`${routes.DASHBOARD_PREFIX}/users`);
+        navigate(`${routes.DASHBOARD_PREFIX}/users`)
       }
     }
-  };
+  }
 
   const handleUpdate = async (data: UpdateUserFields) => {
-    const response = await API.updateUser(data, defaultValues?.id as string);
+    const response = await API.updateUser(data, defaultValues?.id as string)
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
       if (!file) {
         if (defaultValues?.isActiveUser) {
-          authStore.login(response.data);
+          authStore.login(response.data)
         }
-        navigate(`${routes.DASHBOARD_PREFIX}/users`);
-        return;
+        navigate(`${routes.DASHBOARD_PREFIX}/users`)
+        return
       }
       // Upload file
-      const formData = new FormData();
-      formData.append('avatar', file, file.name);
-      const fileResponse = await API.uploadAvatar(formData, response.data.id);
+      const formData = new FormData()
+      formData.append('avatar', file, file.name)
+      const fileResponse = await API.uploadAvatar(formData, response.data.id)
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else if (
         fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else {
         if (defaultValues?.isActiveUser) {
           // Get user with avatar image
-          const userResponse = await API.fetchUser();
+          const userResponse = await API.fetchUser()
           if (
             userResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
           ) {
-            setApiError(userResponse.data.message);
-            setShowError(true);
+            setApiError(userResponse.data.message)
+            setShowError(true)
           } else {
-            authStore.login(userResponse.data);
+            authStore.login(userResponse.data)
           }
         }
-        navigate(`${routes.DASHBOARD_PREFIX}/users`);
+        navigate(`${routes.DASHBOARD_PREFIX}/users`)
       }
     }
-  };
+  }
 
   const handleFileError = () => {
-    if (!file) setFileError(true);
-    else setFileError(false);
-  };
+    if (!file) setFileError(true)
+    else setFileError(false)
+  }
 
   const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (target.files) {
-      const file = target.files[0];
-      setFile(file);
+      const file = target.files[0]
+      setFile(file)
     }
-  };
+  }
 
   useEffect(() => {
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setPreview(reader.result as string);
-        setFileError(false);
-      };
-      reader.readAsDataURL(file);
+        setPreview(reader.result as string)
+        setFileError(false)
+      }
+      reader.readAsDataURL(file)
     } else {
-      setPreview(null);
+      setPreview(null)
     }
-  }, [file]);
+  }, [file])
 
   return (
     <>
@@ -155,7 +155,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
                 preview
                   ? preview
                   : defaultValues &&
-                  `${process.env.REACT_APP_API_URL}/files/${defaultValues?.avatar}`
+                    `${process.env.REACT_APP_API_URL}/files/${defaultValues?.avatar}`
               }
               alt="Avatar"
             />
@@ -342,7 +342,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
         </ToastContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default observer(CreateUpdateUserForm);
+export default observer(CreateUpdateUserForm)

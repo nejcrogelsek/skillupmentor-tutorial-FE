@@ -1,34 +1,34 @@
-import { apiRoutes } from 'constants/apiConstants';
-import { CreateUpdateRoleFields } from 'hooks/react-hook-form/useCreateUpdateRole';
-import { PermissionType, RoleType } from 'models/Role';
+import { apiRoutes } from 'constants/apiConstants'
+import { CreateUpdateRoleFields } from 'hooks/react-hook-form/useCreateUpdateRole'
+import { PermissionType, RoleType } from 'models/Role'
 
-import { apiRequest } from './Api';
+import { apiRequest } from './Api'
 
 export const fetchRoles = async () =>
-  apiRequest<undefined, RoleType[]>('get', apiRoutes.ROLES_PREFIX);
+  apiRequest<undefined, RoleType[]>('get', apiRoutes.ROLES_PREFIX)
 
 export const fetchPermissions = async () =>
-  apiRequest<undefined, PermissionType[]>('get', apiRoutes.PERMISSIONS_PREFIX);
+  apiRequest<undefined, PermissionType[]>('get', apiRoutes.PERMISSIONS_PREFIX)
 
 export const fetchPaginatedRoles = async (pageNumber: number) =>
   apiRequest<undefined, RoleType[]>(
     'get',
     `${apiRoutes.ROLES_PREFIX}/paginated?page=${pageNumber}`,
-  );
+  )
 
 export const createRole = async (data: CreateUpdateRoleFields) =>
   apiRequest<CreateUpdateRoleFields, RoleType>(
     'post',
     apiRoutes.ROLES_PREFIX,
     data,
-  );
+  )
 
 export const updateRole = async (data: CreateUpdateRoleFields, id: string) =>
   apiRequest<CreateUpdateRoleFields, RoleType>(
     'patch',
     `${apiRoutes.ROLES_PREFIX}/${id}`,
     data,
-  );
+  )
 
 export const deleteRole = async (id: string) =>
-  apiRequest<string, RoleType>('delete', `${apiRoutes.ROLES_PREFIX}/${id}`);
+  apiRequest<string, RoleType>('delete', `${apiRoutes.ROLES_PREFIX}/${id}`)

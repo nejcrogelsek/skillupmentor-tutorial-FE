@@ -1,13 +1,13 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
 
 export interface RegisterUserFields {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  confirm_password: string;
+  first_name: string
+  last_name: string
+  email: string
+  password: string
+  confirm_password: string
 }
 
 export const useRegisterForm = () => {
@@ -24,7 +24,7 @@ export const useRegisterForm = () => {
     confirm_password: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords do not match')
       .required('Passwords do not match'),
-  });
+  })
 
   const {
     handleSubmit,
@@ -41,14 +41,14 @@ export const useRegisterForm = () => {
     },
     mode: 'onSubmit',
     resolver: yupResolver(RegisterSchema),
-  });
+  })
 
   return {
     handleSubmit,
     errors,
     reset,
     control,
-  };
-};
+  }
+}
 
-export type RegisterForm = ReturnType<typeof useRegisterForm>;
+export type RegisterForm = ReturnType<typeof useRegisterForm>

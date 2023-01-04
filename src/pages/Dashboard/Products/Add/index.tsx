@@ -1,6 +1,6 @@
-import DashboardLayout from 'components/ui/DashboardLayout';
-import CreateUpdateProductForm from 'components/product/CreateUpdateProductForm/CreateUpdateProductForm';
-import { FC } from 'react';
+import DashboardLayout from 'components/ui/DashboardLayout'
+import CreateUpdateProductForm from 'components/product/CreateUpdateProductForm/CreateUpdateProductForm'
+import { FC } from 'react'
 
 const DashboardProductsAdd: FC = () => {
   return (
@@ -8,7 +8,7 @@ const DashboardProductsAdd: FC = () => {
       <h1 className="mb-4 text-center">Create new product</h1>
       <CreateUpdateProductForm />
     </DashboardLayout>
-  );
-};
+  )
+}
 
-export default DashboardProductsAdd;
+export default DashboardProductsAdd

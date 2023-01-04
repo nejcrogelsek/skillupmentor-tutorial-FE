@@ -1,24 +1,24 @@
-import DashboardLayout from 'components/ui/DashboardLayout';
-import { routes } from 'constants/routesConstants';
-import { FC, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
-import * as API from 'api/Api';
-import { UserType } from 'models/Auth';
-import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import useMediaQuery from 'hooks/useMediaQuery';
-import { StatusCode } from 'constants/errorConstants';
-import authStore from 'stores/auth.store';
-import { observer } from 'mobx-react';
+import DashboardLayout from 'components/ui/DashboardLayout'
+import { routes } from 'constants/routesConstants'
+import { FC, useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
+import * as API from 'api/Api'
+import { UserType } from 'models/Auth'
+import Button from 'react-bootstrap/Button'
+import Table from 'react-bootstrap/Table'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import useMediaQuery from 'hooks/useMediaQuery'
+import { StatusCode } from 'constants/errorConstants'
+import authStore from 'stores/auth.store'
+import { observer } from 'mobx-react'
 
 const DashboardUsers: FC = () => {
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
-  const { isMobile } = useMediaQuery(768);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
+  const { isMobile } = useMediaQuery(768)
+  const [pageNumber, setPageNumber] = useState<number>(1)
   const { data, isLoading, refetch } = useQuery(
     ['fetchUsers', pageNumber],
     () => API.fetchUsers(pageNumber),
@@ -26,30 +26,30 @@ const DashboardUsers: FC = () => {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
     },
-  );
+  )
   const { mutate } = useMutation((id: string) => API.deleteUser(id), {
     onSuccess: (response) => {
       if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(response.data.message);
-        setShowError(true);
+        setApiError(response.data.message)
+        setShowError(true)
       } else if (
         response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(response.data.message);
-        setShowError(true);
+        setApiError(response.data.message)
+        setShowError(true)
       } else {
-        refetch();
+        refetch()
       }
     },
     onError: () => {
-      setApiError('Something went wrong while deleting a user.');
-      setShowError(true);
+      setApiError('Something went wrong while deleting a user.')
+      setShowError(true)
     },
-  });
+  })
 
   const handleDelete = async (id: string) => {
-    mutate(id);
-  };
+    mutate(id)
+  }
 
   return (
     <DashboardLayout>
@@ -158,7 +158,7 @@ const DashboardUsers: FC = () => {
         </ToastContainer>
       )}
     </DashboardLayout>
-  );
-};
+  )
+}
 
-export default observer(DashboardUsers);
+export default observer(DashboardUsers)

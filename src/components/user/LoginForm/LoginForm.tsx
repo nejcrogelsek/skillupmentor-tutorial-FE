@@ -1,36 +1,36 @@
-import { LoginUserFields, useLoginForm } from 'hooks/react-hook-form/useLogin';
-import { FC, useState } from 'react';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import Button from 'react-bootstrap/Button';
-import FormLabel from 'react-bootstrap/FormLabel';
-import Form from 'react-bootstrap/Form';
-import { Controller } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import authStore from 'stores/auth.store';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import { observer } from 'mobx-react';
+import { LoginUserFields, useLoginForm } from 'hooks/react-hook-form/useLogin'
+import { FC, useState } from 'react'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import Button from 'react-bootstrap/Button'
+import FormLabel from 'react-bootstrap/FormLabel'
+import Form from 'react-bootstrap/Form'
+import { Controller } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import authStore from 'stores/auth.store'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import { observer } from 'mobx-react'
 
 const LoginForm: FC = () => {
-  const navigate = useNavigate();
-  const { handleSubmit, errors, control } = useLoginForm();
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
+  const navigate = useNavigate()
+  const { handleSubmit, errors, control } = useLoginForm()
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
 
   const onSubmit = handleSubmit(async (data: LoginUserFields) => {
-    const response = await API.login(data);
+    const response = await API.login(data)
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
-      authStore.login(response.data);
-      navigate('/');
+      authStore.login(response.data)
+      navigate('/')
     }
-  });
+  })
 
   return (
     <>
@@ -104,7 +104,7 @@ const LoginForm: FC = () => {
         </ToastContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default observer(LoginForm);
+export default observer(LoginForm)

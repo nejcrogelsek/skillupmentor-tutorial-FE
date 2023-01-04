@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
 
 const Page404: FC = () => {
   return (
@@ -9,7 +9,7 @@ const Page404: FC = () => {
       </h1>
       <Link to="/">Go home</Link>
     </div>
-  );
-};
+  )
+}
 
-export default Page404;
+export default Page404

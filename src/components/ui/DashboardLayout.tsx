@@ -1,9 +1,9 @@
-import { FC, ReactNode } from 'react';
-import Sidebar from './Sidebar';
-import Topbar from './Topbar';
+import { FC, ReactNode } from 'react'
+import Sidebar from './Sidebar'
+import Topbar from './Topbar'
 
 interface Props {
-  children: ReactNode | ReactNode[];
+  children: ReactNode | ReactNode[]
 }
 
 const DashboardLayout: FC<Props> = ({ children }) => {
@@ -15,7 +15,7 @@ const DashboardLayout: FC<Props> = ({ children }) => {
       </div>
       <div className="p-4">{children}</div>
     </>
-  );
-};
+  )
+}
 
-export default DashboardLayout;
+export default DashboardLayout

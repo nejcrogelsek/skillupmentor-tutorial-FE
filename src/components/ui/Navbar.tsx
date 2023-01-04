@@ -1,33 +1,33 @@
-import 'bootstrap/js/src/collapse.js';
-import { routes } from 'constants/routesConstants';
-import { FC, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import authStore from 'stores/auth.store';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
+import 'bootstrap/js/src/collapse.js'
+import { routes } from 'constants/routesConstants'
+import { FC, useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import authStore from 'stores/auth.store'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
 
 const Navbar: FC = () => {
-  const navigate = useNavigate();
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
+  const navigate = useNavigate()
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
 
   const signout = async () => {
-    const response = await API.signout();
+    const response = await API.signout()
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
-      authStore.signout();
-      navigate('/');
+      authStore.signout()
+      navigate('/')
     }
-  };
+  }
 
   return (
     <>
@@ -100,7 +100,7 @@ const Navbar: FC = () => {
         </ToastContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

@@ -1,16 +1,16 @@
-import { routes } from 'constants/routesConstants';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import Button from 'react-bootstrap/Button';
+import { routes } from 'constants/routesConstants'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { NavLink } from 'react-router-dom'
+import Offcanvas from 'react-bootstrap/Offcanvas'
+import Button from 'react-bootstrap/Button'
 
 interface ItemProps extends ISidebarItem {
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 
 interface ISidebarItem {
-  title: string;
-  href: string;
+  title: string
+  href: string
 }
 
 const sidebarItems: ISidebarItem[] = [
@@ -34,7 +34,7 @@ const sidebarItems: ISidebarItem[] = [
     title: 'Orders',
     href: `${routes.DASHBOARD_PREFIX}/orders`,
   },
-];
+]
 
 const Item = ({ title, href, setOpen }: ItemProps) => {
   return (
@@ -47,14 +47,14 @@ const Item = ({ title, href, setOpen }: ItemProps) => {
         {title}
       </NavLink>
     </li>
-  );
-};
+  )
+}
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   return (
     <div>
@@ -102,7 +102,7 @@ const Sidebar = () => {
         </Offcanvas.Body>
       </Offcanvas>
     </div>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

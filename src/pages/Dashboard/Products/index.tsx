@@ -1,22 +1,22 @@
-import DashboardLayout from 'components/ui/DashboardLayout';
-import { routes } from 'constants/routesConstants';
-import useMediaQuery from 'hooks/useMediaQuery';
-import { FC, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import { useMutation, useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import { ProductType } from 'models/Product';
+import DashboardLayout from 'components/ui/DashboardLayout'
+import { routes } from 'constants/routesConstants'
+import useMediaQuery from 'hooks/useMediaQuery'
+import { FC, useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Table from 'react-bootstrap/Table'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import { useMutation, useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import { ProductType } from 'models/Product'
 
 const DashboardProducts: FC = () => {
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
-  const { isMobile } = useMediaQuery(768);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
+  const { isMobile } = useMediaQuery(768)
+  const [pageNumber, setPageNumber] = useState<number>(1)
   const { data, isLoading, refetch } = useQuery(
     ['fetchProducts', pageNumber],
     () => API.fetchProducts(pageNumber),
@@ -24,30 +24,30 @@ const DashboardProducts: FC = () => {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
     },
-  );
+  )
   const { mutate } = useMutation((id: string) => API.deleteProduct(id), {
     onSuccess: (response) => {
       if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(response.data.message);
-        setShowError(true);
+        setApiError(response.data.message)
+        setShowError(true)
       } else if (
         response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(response.data.message);
-        setShowError(true);
+        setApiError(response.data.message)
+        setShowError(true)
       } else {
-        refetch();
+        refetch()
       }
     },
     onError: () => {
-      setApiError('Something went wrong while deleting a product.');
-      setShowError(true);
+      setApiError('Something went wrong while deleting a product.')
+      setShowError(true)
     },
-  });
+  })
 
   const handleDelete = async (id: string) => {
-    mutate(id);
-  };
+    mutate(id)
+  }
 
   return (
     <DashboardLayout>
@@ -151,7 +151,7 @@ const DashboardProducts: FC = () => {
         </ToastContainer>
       )}
     </DashboardLayout>
-  );
-};
+  )
+}
 
-export default DashboardProducts;
+export default DashboardProducts

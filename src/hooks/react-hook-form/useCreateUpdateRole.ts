@@ -1,21 +1,21 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { RoleType } from 'models/Role';
-import { useForm } from 'react-hook-form';
-import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { RoleType } from 'models/Role'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
 
 export interface CreateUpdateRoleFields {
-  name: string;
+  name: string
 }
 
 interface Props {
-  defaultValues?: RoleType;
+  defaultValues?: RoleType
 }
 
 export const useCreateUpdateRole = ({ defaultValues }: Props) => {
   const CreateRoleSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     permissions: Yup.array().min(1),
-  });
+  })
 
   const {
     handleSubmit,
@@ -31,7 +31,7 @@ export const useCreateUpdateRole = ({ defaultValues }: Props) => {
     },
     mode: 'onSubmit',
     resolver: yupResolver(CreateRoleSchema),
-  });
+  })
 
   return {
     handleSubmit,
@@ -39,7 +39,7 @@ export const useCreateUpdateRole = ({ defaultValues }: Props) => {
     reset,
     control,
     register,
-  };
-};
+  }
+}
 
-export type CreateUpdateRoleForm = ReturnType<typeof useCreateUpdateRole>;
+export type CreateUpdateRoleForm = ReturnType<typeof useCreateUpdateRole>

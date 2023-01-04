@@ -1,111 +1,111 @@
 import {
   RegisterUserFields,
   useRegisterForm,
-} from 'hooks/react-hook-form/useRegister';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { Controller } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import FormLabel from 'react-bootstrap/FormLabel';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import { observer } from 'mobx-react';
-import Avatar from 'react-avatar';
-import authStore from 'stores/auth.store';
+} from 'hooks/react-hook-form/useRegister'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { Controller } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import FormLabel from 'react-bootstrap/FormLabel'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import { observer } from 'mobx-react'
+import Avatar from 'react-avatar'
+import authStore from 'stores/auth.store'
 
 const RegisterForm: FC = () => {
-  const { handleSubmit, errors, control } = useRegisterForm();
-  const navigate = useNavigate();
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
+  const { handleSubmit, errors, control } = useRegisterForm()
+  const navigate = useNavigate()
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
 
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [fileError, setFileError] = useState(false);
+  const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [fileError, setFileError] = useState(false)
 
   const onSubmit = handleSubmit(async (data: RegisterUserFields) => {
-    if (!file) return;
-    const response = await API.register(data);
+    if (!file) return
+    const response = await API.register(data)
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
       // Login user before uploading an avatar image
       const loginResponse = await API.login({
         email: data.email,
         password: data.password,
-      });
+      })
       if (loginResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(loginResponse.data.message);
-        setShowError(true);
+        setApiError(loginResponse.data.message)
+        setShowError(true)
       } else if (
         loginResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(loginResponse.data.message);
-        setShowError(true);
+        setApiError(loginResponse.data.message)
+        setShowError(true)
       } else {
         // Upload file
-        const formData = new FormData();
-        formData.append('avatar', file, file.name);
+        const formData = new FormData()
+        formData.append('avatar', file, file.name)
         const fileResponse = await API.uploadAvatar(
           formData,
           loginResponse.data.id,
-        );
+        )
         if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
-          setApiError(fileResponse.data.message);
-          setShowError(true);
+          setApiError(fileResponse.data.message)
+          setShowError(true)
         } else if (
           fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
         ) {
-          setApiError(fileResponse.data.message);
-          setShowError(true);
+          setApiError(fileResponse.data.message)
+          setShowError(true)
         } else {
           // Get user with avatar image
-          const userResponse = await API.fetchUser();
+          const userResponse = await API.fetchUser()
           if (
             userResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
           ) {
-            setApiError(userResponse.data.message);
-            setShowError(true);
+            setApiError(userResponse.data.message)
+            setShowError(true)
           } else {
-            authStore.login(userResponse.data);
-            navigate('/');
+            authStore.login(userResponse.data)
+            navigate('/')
           }
         }
       }
     }
-  });
+  })
 
   const handleFileError = () => {
-    if (!file) setFileError(true);
-    else setFileError(false);
-  };
+    if (!file) setFileError(true)
+    else setFileError(false)
+  }
 
   const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (target.files) {
-      const file = target.files[0];
-      setFile(file);
+      const file = target.files[0]
+      setFile(file)
     }
-  };
+  }
 
   useEffect(() => {
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setPreview(reader.result as string);
-        setFileError(false);
-      };
-      reader.readAsDataURL(file);
+        setPreview(reader.result as string)
+        setFileError(false)
+      }
+      reader.readAsDataURL(file)
     } else {
-      setPreview(null);
+      setPreview(null)
     }
-  }, [file]);
+  }, [file])
 
   return (
     <>
@@ -270,7 +270,7 @@ const RegisterForm: FC = () => {
         </ToastContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default observer(RegisterForm);
+export default observer(RegisterForm)

@@ -1,117 +1,117 @@
 import {
   CreateUpdateProductFields,
   useCreateUpdateProductForm,
-} from 'hooks/react-hook-form/useCreateUpdateProduct';
-import { ChangeEvent, FC, useState } from 'react';
-import { Controller } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import FormLabel from 'react-bootstrap/FormLabel';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import { observer } from 'mobx-react';
-import { routes } from 'constants/routesConstants';
-import { ProductType } from 'models/Product';
+} from 'hooks/react-hook-form/useCreateUpdateProduct'
+import { ChangeEvent, FC, useState } from 'react'
+import { Controller } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import FormLabel from 'react-bootstrap/FormLabel'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import { observer } from 'mobx-react'
+import { routes } from 'constants/routesConstants'
+import { ProductType } from 'models/Product'
 
 interface Props {
-  defaultValues?: ProductType & { isActiveUser?: boolean };
+  defaultValues?: ProductType & { isActiveUser?: boolean }
 }
 
 const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
   const { handleSubmit, errors, control } = useCreateUpdateProductForm({
     defaultValues,
-  });
-  const navigate = useNavigate();
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
+  })
+  const navigate = useNavigate()
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
 
-  const [file, setFile] = useState<File | null>(null);
-  const [fileError, setFileError] = useState(false);
+  const [file, setFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState(false)
 
   const onSubmit = handleSubmit(async (data: CreateUpdateProductFields) => {
-    if (!defaultValues) await handleAdd(data);
-    else await handleUpdate(data);
-  });
+    if (!defaultValues) await handleAdd(data)
+    else await handleUpdate(data)
+  })
 
   const handleAdd = async (data: CreateUpdateProductFields) => {
-    if (!file) return;
-    const response = await API.createProduct(data);
+    if (!file) return
+    const response = await API.createProduct(data)
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
       // Upload file
-      const formData = new FormData();
-      formData.append('image', file, file.name);
+      const formData = new FormData()
+      formData.append('image', file, file.name)
       const fileResponse = await API.uploadProductImage(
         formData,
         response.data.id,
-      );
+      )
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else if (
         fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else {
-        navigate(`${routes.DASHBOARD_PREFIX}/products`);
+        navigate(`${routes.DASHBOARD_PREFIX}/products`)
       }
     }
-  };
+  }
 
   const handleUpdate = async (data: CreateUpdateProductFields) => {
-    const response = await API.updateProduct(data, defaultValues?.id as string);
+    const response = await API.updateProduct(data, defaultValues?.id as string)
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
       if (!file) {
-        navigate(`${routes.DASHBOARD_PREFIX}/products`);
-        return;
+        navigate(`${routes.DASHBOARD_PREFIX}/products`)
+        return
       }
       // Upload file
-      const formData = new FormData();
-      formData.append('image', file, file.name);
+      const formData = new FormData()
+      formData.append('image', file, file.name)
       const fileResponse = await API.uploadProductImage(
         formData,
         response.data.id,
-      );
+      )
       if (fileResponse.data?.statusCode === StatusCode.BAD_REQUEST) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else if (
         fileResponse.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR
       ) {
-        setApiError(fileResponse.data.message);
-        setShowError(true);
+        setApiError(fileResponse.data.message)
+        setShowError(true)
       } else {
-        navigate(`${routes.DASHBOARD_PREFIX}/products`);
+        navigate(`${routes.DASHBOARD_PREFIX}/products`)
       }
     }
-  };
+  }
 
   const handleFileError = () => {
-    if (!file) setFileError(true);
-    else setFileError(false);
-  };
+    if (!file) setFileError(true)
+    else setFileError(false)
+  }
 
   const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (target.files) {
-      const file = target.files[0];
-      setFile(file);
+      const file = target.files[0]
+      setFile(file)
     }
-  };
+  }
 
   return (
     <>
@@ -223,7 +223,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
         </ToastContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default observer(CreateUpdateUserForm);
+export default observer(CreateUpdateUserForm)

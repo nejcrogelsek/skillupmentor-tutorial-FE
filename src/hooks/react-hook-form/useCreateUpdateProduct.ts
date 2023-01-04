@@ -1,16 +1,16 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ProductType } from 'models/Product';
-import { useForm } from 'react-hook-form';
-import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { ProductType } from 'models/Product'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
 
 export interface CreateUpdateProductFields {
-  title: string;
-  description: string;
-  price: number;
+  title: string
+  description: string
+  price: number
 }
 
 interface Props {
-  defaultValues?: ProductType;
+  defaultValues?: ProductType
 }
 
 export const useCreateUpdateProductForm = ({ defaultValues }: Props) => {
@@ -18,7 +18,7 @@ export const useCreateUpdateProductForm = ({ defaultValues }: Props) => {
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
     price: Yup.number().required('Price is required'),
-  });
+  })
 
   const {
     handleSubmit,
@@ -34,16 +34,16 @@ export const useCreateUpdateProductForm = ({ defaultValues }: Props) => {
     },
     mode: 'onSubmit',
     resolver: yupResolver(CreateProductSchema),
-  });
+  })
 
   return {
     handleSubmit,
     errors,
     reset,
     control,
-  };
-};
+  }
+}
 
 export type CreateUpdateProductForm = ReturnType<
   typeof useCreateUpdateProductForm
->;
+>

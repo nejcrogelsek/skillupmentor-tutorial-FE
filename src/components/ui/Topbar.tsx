@@ -1,35 +1,35 @@
-import { routes } from 'constants/routesConstants';
-import { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import authStore from 'stores/auth.store';
-import Button from 'react-bootstrap/Button';
-import * as API from 'api/Api';
-import { StatusCode } from 'constants/errorConstants';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import Toast from 'react-bootstrap/Toast';
-import { observer } from 'mobx-react';
-import useMediaQuery from 'hooks/useMediaQuery';
-import Avatar from 'react-avatar';
+import { routes } from 'constants/routesConstants'
+import { FC, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import authStore from 'stores/auth.store'
+import Button from 'react-bootstrap/Button'
+import * as API from 'api/Api'
+import { StatusCode } from 'constants/errorConstants'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+import { observer } from 'mobx-react'
+import useMediaQuery from 'hooks/useMediaQuery'
+import Avatar from 'react-avatar'
 
 const Topbar: FC = () => {
-  const { isMobile } = useMediaQuery(768);
-  const navigate = useNavigate();
-  const [apiError, setApiError] = useState('');
-  const [showError, setShowError] = useState(false);
+  const { isMobile } = useMediaQuery(768)
+  const navigate = useNavigate()
+  const [apiError, setApiError] = useState('')
+  const [showError, setShowError] = useState(false)
 
   const signout = async () => {
-    const response = await API.signout();
+    const response = await API.signout()
     if (response.data?.statusCode === StatusCode.BAD_REQUEST) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else if (response.data?.statusCode === StatusCode.INTERNAL_SERVER_ERROR) {
-      setApiError(response.data.message);
-      setShowError(true);
+      setApiError(response.data.message)
+      setShowError(true)
     } else {
-      authStore.signout();
-      navigate('/');
+      authStore.signout()
+      navigate('/')
     }
-  };
+  }
 
   return (
     <>
@@ -60,7 +60,11 @@ const Topbar: FC = () => {
             <Link
               className="btn btn-dark text-decoration-none text-light me-3"
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-              state={{ ...authStore.user, role_id: authStore.user?.role?.id, isActiveUser: true }}
+              state={{
+                ...authStore.user,
+                role_id: authStore.user?.role?.id,
+                isActiveUser: true,
+              }}
             >
               <Avatar
                 className="topbar__avatar"
@@ -102,7 +106,7 @@ const Topbar: FC = () => {
         </ToastContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default observer(Topbar);
+export default observer(Topbar)

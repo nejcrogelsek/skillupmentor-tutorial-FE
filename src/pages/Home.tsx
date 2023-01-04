@@ -1,5 +1,5 @@
-import Layout from 'components/ui/Layout';
-import { FC } from 'react';
+import Layout from 'components/ui/Layout'
+import { FC } from 'react'
 
 const Home: FC = () => {
   return (
@@ -25,7 +25,7 @@ const Home: FC = () => {
         </div>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

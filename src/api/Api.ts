@@ -1,11 +1,11 @@
-import Axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios'
 
 export async function apiRequest<D = Record<string, unknown>, R = unknown>(
   method: 'get' | 'delete' | 'head' | 'options' | 'post' | 'put' | 'patch',
   path: string,
   input?: D,
   options?: {
-    headers?: AxiosRequestHeaders;
+    headers?: AxiosRequestHeaders
   } & AxiosRequestConfig,
 ) {
   try {
@@ -16,17 +16,17 @@ export async function apiRequest<D = Record<string, unknown>, R = unknown>(
       data: input,
       headers: options?.headers,
       withCredentials: true,
-    });
-    return response;
+    })
+    return response
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Error message: error.response.data.message
     // return error.response ? error.response.data ?? error.response.data : error;
-    return error.response;
+    return error.response
   }
 }
 
-export * from './User';
-export * from './Product';
-export * from './Role';
-export * from './Order';
+export * from './User'
+export * from './Product'
+export * from './Role'
+export * from './Order'

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from 'react'
 
 const Footer: FC = () => {
   return (
@@ -6,7 +6,7 @@ const Footer: FC = () => {
       <img src="/images/logo.png" alt="SkillUp Mentor" width={123} />
       <p className="mb-0">&copy; 2023</p>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
