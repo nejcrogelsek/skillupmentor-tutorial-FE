@@ -35,7 +35,7 @@ const DashboardOrders: FC = () => {
   };
 
   const handleExport = async () => {
-    const { data } = await axios.post(`http://localhost:8080${apiRoutes.ORDERS_PREFIX}/export`, {}, {
+    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}${apiRoutes.ORDERS_PREFIX}/export`, {}, {
       responseType: 'blob'
     });
     console.log('RESPONSE');

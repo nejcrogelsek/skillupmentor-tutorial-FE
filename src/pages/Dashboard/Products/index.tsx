@@ -84,7 +84,7 @@ const DashboardProducts: FC = () => {
                       <td>
                         <img
                           width={100}
-                          src={`http://localhost:8080/files/${item.image}`}
+                          src={`${process.env.REACT_APP_API_URL}/files/${item.image}`}
                           alt={item.title}
                         />
                       </td>

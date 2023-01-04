@@ -155,7 +155,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
                 preview
                   ? preview
                   : defaultValues &&
-                  `http://localhost:8080/files/${defaultValues?.avatar}`
+                  `${process.env.REACT_APP_API_URL}/files/${defaultValues?.avatar}`
               }
               alt="Avatar"
             />

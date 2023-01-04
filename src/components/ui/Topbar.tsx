@@ -65,7 +65,7 @@ const Topbar: FC = () => {
               <Avatar
                 className="topbar__avatar"
                 round
-                src={`http://localhost:8080/files/${authStore.user?.avatar}`}
+                src={`${process.env.REACT_APP_API_URL}/files/${authStore.user?.avatar}`}
                 alt={
                   authStore.user?.first_name || authStore.user?.last_name
                     ? `${authStore.user?.first_name} ${authStore.user?.last_name}`
