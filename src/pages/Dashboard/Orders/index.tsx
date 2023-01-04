@@ -42,7 +42,7 @@ const DashboardOrders: FC = () => {
     console.log(data);
     // const { data } = await API.exportCSV();
     const blob = new Blob(data, { type: 'text/csv' });
-    const url = window.URL.createObjectURL(data);
+    const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = 'orders.csv';

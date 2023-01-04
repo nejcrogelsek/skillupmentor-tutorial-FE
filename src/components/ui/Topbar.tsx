@@ -60,7 +60,7 @@ const Topbar: FC = () => {
             <Link
               className="btn btn-dark text-decoration-none text-light me-3"
               to={`${routes.DASHBOARD_PREFIX}/users/edit`}
-              state={{ ...authStore.user, isActiveUser: true }}
+              state={{ ...authStore.user, role_id: authStore.user?.role?.id, isActiveUser: true }}
             >
               <Avatar
                 className="topbar__avatar"
