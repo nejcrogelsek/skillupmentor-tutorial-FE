@@ -255,7 +255,7 @@ const RegisterForm: FC = () => {
             Login
           </Link>
         </div>
-        <Button className="w-100" type="submit" onMouseDown={handleFileError}>
+        <Button className="w-100" type="submit" onMouseUp={handleFileError}>
           Create an account
         </Button>
       </Form>

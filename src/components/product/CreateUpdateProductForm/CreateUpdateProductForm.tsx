@@ -207,7 +207,7 @@ const CreateUpdateUserForm: FC<Props> = ({ defaultValues }) => {
         <Button
           className="w-100"
           type="submit"
-          onMouseDown={defaultValues ? undefined : handleFileError}
+          onMouseUp={defaultValues ? undefined : handleFileError}
         >
           {defaultValues ? 'Update product' : 'Create new product'}
         </Button>
