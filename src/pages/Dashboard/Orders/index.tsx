@@ -42,11 +42,8 @@ const DashboardOrders: FC = () => {
         responseType: 'blob',
       },
     )
-    console.log('RESPONSE')
-    console.log(data)
-    // const { data } = await API.exportCSV();
-    const blob = new Blob(data, { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
+    const blob = new Blob([data], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(data)
     const link = document.createElement('a')
     link.href = url
     link.download = 'orders.csv'
@@ -80,7 +77,7 @@ const DashboardOrders: FC = () => {
                 </thead>
                 <tbody>
                   {data?.data.data.map((item: OrderType, index: number) => (
-                    <Fragment key={index}>
+                    <Fragment key={crypto.randomUUID()}>
                       <tr>
                         <td>{item.name}</td>
                         <td>{item.email}</td>
@@ -117,7 +114,7 @@ const DashboardOrders: FC = () => {
                               </thead>
                               <tbody>
                                 {item.order_items.map((orderItem) => (
-                                  <tr key={`nested-${index}`}>
+                                  <tr key={crypto.randomUUID()}>
                                     <td>{orderItem.product_title}</td>
                                     <td>{orderItem.quantity}</td>
                                     <td>{orderItem.price}</td>
