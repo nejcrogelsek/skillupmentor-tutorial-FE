@@ -10,12 +10,12 @@ import { apiRoutes } from 'constants/apiConstants'
 
 const hide = {
   maxHeight: 0,
-  transition: '0.3s ease-in',
+  transition: '1s ease-in',
 }
 
 const show = {
   maxHeight: '150px',
-  transition: '0.3s ease-out',
+  transition: '1s ease-out',
 }
 
 const DashboardOrders: FC = () => {
